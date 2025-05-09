@@ -21,4 +21,6 @@ public enum Money {
 	public String toString() {
 		return name;
 	}
+	
+	
 }
