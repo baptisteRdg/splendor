@@ -2,7 +2,7 @@ package model;
 
 import java.util.HashMap;
 
-public  interface Card {
+public sealed interface Card permits Master,Upgrade {
 	int point();
 	HashMap<Money,Integer> cost();
 	Money advantage();
