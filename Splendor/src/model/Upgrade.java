@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Upgrade implements Card{
-	private int pts;
-	private String id;
-	private Money advantage;
-	private int level;
+	private final int pts;
+	private final String id;
+	private final Money advantage;
+	private final int level;
 	private final HashMap<Money,Integer> cost;
 	
 	
@@ -15,7 +15,6 @@ public class Upgrade implements Card{
 		Objects.requireNonNull(id);
 		if (level>3 || level<1) {
 			throw new IllegalArgumentException("value on level is out on scope");
-			
 		}
 		this.level=level;
 		this.pts=level;

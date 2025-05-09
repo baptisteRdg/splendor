@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Master implements Card {
-	private int pts;
+	private final int pts;
 	private final HashMap<Money,Integer> cost;
-	private String id;
+	private final String id;
 	
 	Master(int pts,String id){
 		Objects.requireNonNull(id);

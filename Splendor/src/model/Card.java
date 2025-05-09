@@ -1,5 +1,5 @@
 package model;
 
-public interface Card {
+public sealed interface Card permits Master,Upgrade{
 
 }
