@@ -3,7 +3,7 @@ package model;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Master implements Card {
+public non-sealed class Master implements Card {
 	private final int pts;
 	private final HashMap<Money,Integer> cost;
 	private final String id;

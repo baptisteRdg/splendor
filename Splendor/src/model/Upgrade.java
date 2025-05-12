@@ -3,7 +3,7 @@ package model;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Upgrade implements Card{
+public non-sealed class Upgrade implements Card{
 	private final int pts;
 	private final String id;
 	private final Money advantage;
