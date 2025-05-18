@@ -34,6 +34,10 @@ public non-sealed class Master implements Card {
 		return id;
 	}
 	
+	public int level() {
+		return 4;
+	}
+	
 	@Override
 	public String toString() {
 		return "Noble: "+id+" pts:"+pts+" coute "+cost;

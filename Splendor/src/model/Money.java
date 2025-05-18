@@ -1,5 +1,6 @@
 package model;
 
+
 public enum Money {
 
 	EMERALD("Émeraude"),
@@ -16,11 +17,9 @@ public enum Money {
 	/// Nom utilisé dans le jeu
 	private final String name;
 	
-
 	@Override
 	public String toString() {
 		return name;
 	}
-	
 	
 }
