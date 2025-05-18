@@ -30,7 +30,9 @@ public non-sealed class Upgrade implements Card{
 	public Money advantage() {
 		return advantage;
 	}
-	
+	public int level() {
+		return level;
+	}
 	public HashMap<Money,Integer> cost(){
 		return cost;
 	}

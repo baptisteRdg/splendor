@@ -7,7 +7,7 @@ public sealed interface Card permits Master,Upgrade {
 	HashMap<Money,Integer> cost();
 	Money advantage();
 	String id();
-	
+	int level();
 	@Override
 	String toString();
 }

@@ -36,6 +36,9 @@ public class Player {
 		}
 	}
 	
+	public int numberMonney() {
+		return money.values().stream().mapToInt(s->s).sum();
+	}
 	
 	public int getPts() {
 		return pts;
