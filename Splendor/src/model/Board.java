@@ -9,18 +9,18 @@ import java.util.Objects;
 
 public class Board {
 	private final int number_of_joueur;
-	private final ArrayList<ArrayList<Card>> pioche;
+	private final ArrayList<ArrayList<Card>> pioches;
 	private final ArrayList<ArrayList<Card>> grille;
 	private final List<Player> joueurs;
 	private final HashMap<Money, Integer> jetons;
 	
 	private Card nextCard(int level) {
-		if(pioche.get(level-1).isEmpty()) {
+		if(pioches.get(level-1).isEmpty()) {
 			return null;
 		}
-		var index=(int)(Math.random()*pioche.get(level-1).size());
-		var returned=pioche.get(level-1).get(index);
-		pioche.get(level-1).remove(index);
+		var index=(int)(Math.random()*pioches.get(level-1).size());
+		var returned=pioches.get(level-1).get(index);
+		pioches.get(level-1).remove(index);
 		return returned;
 		
 	}
@@ -43,27 +43,45 @@ public class Board {
 		return tmp;
 	}
 	
-	Board(int number_player,List<Player> joueur,List<Card> cards){
+	public Board(int number_player,List<Player> joueur,List<Card> cards){
 		Objects.requireNonNull(joueur);
 		Objects.requireNonNull(cards);
+		
+		pioches = new ArrayList<ArrayList<Card>>();
+		grille = new ArrayList<ArrayList<Card>>();
+		jetons = firstMoney();
+		
 		if(number_player<2 || number_player>4) {
 			throw new IllegalArgumentException("nombre de joueur invalid");
 		}
 		number_of_joueur=number_player;
 		this.joueurs=List.copyOf(joueur);
-		pioche=new ArrayList<ArrayList<Card>>();
-		for(var a:cards) {
-			pioche.get(a.level()-1).add(a);
+		for(int i=0;i<4;i+=1) {
+			pioches.add(new ArrayList<Card>());
 		}
-		grille=new ArrayList<ArrayList<Card>>();
+		for(var a:cards) {
+			pioches.get(a.level()-1).add(a);
+		}
+		
+		for(int i=0;i<4;i+=1) {
+			grille.add(new ArrayList<Card>());
+		}
 		for(int j=1;j<=3;j+=1) {
 			for(int i=0;i<5;i+=1) {
 				grille.get(j-1).add(nextCard(j));
 			}}
+		
 		var number_master=(number_of_joueur==2)?3:(number_of_joueur==3)?4:5;
 		for(int i=0;i<number_master;i+=1) {
 			grille.get(3).add(nextCard(4));
 		}
-		jetons=firstMoney();
 		}
+	
+	public HashMap<Money, Integer> getJetons() {
+		return jetons;
+	}
+	
+	public List<Player> getJoueurs() {
+		return joueurs;
+	}
 }

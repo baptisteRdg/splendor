@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import view.Ter;
+
 public class Player {
 
 	/// Nombre de points du joueur
