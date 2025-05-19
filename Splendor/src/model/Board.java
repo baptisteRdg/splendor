@@ -67,6 +67,24 @@ public class Board {
 		jetons=firstMoney();
 		}
 	
+	public List<Card> masterPosibility(Player a) {
+		var retour=new ArrayList<Card>();
+		
+		for(var card:grille.get(4-1)) {
+			var flag=1;
+			for(var key: card.cost().keySet()) {
+				if(card.cost().get(key)>a.getMoney().get(key)) {
+					flag=0;
+					break;
+				}
+			}
+			if(flag==1) {
+				retour.add(card);
+			}
+		}
+		return retour;
+	}
+	
 	public Card  getCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0) {
 			throw new IllegalArgumentException("les coordonnés ne sont pas valide");
