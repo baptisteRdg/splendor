@@ -32,7 +32,7 @@ public class Main {
         System.out.println("Achat réussi ? " + achatReussi);
 
         if (achatReussi) {
-            alice.addPossession(upgradeCard);
+            alice.addCard(upgradeCard);
             alice.update(); // Mise à jour des points
         }
 

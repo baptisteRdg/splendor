@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
 
 import model.*;
 import view.Ter;
@@ -51,7 +49,7 @@ public class Game {
 
 	    for(int i = 0; i < nbPlayer; i++) {
 	        var str = new StringBuilder().append(msg).append(i+1).append("/").append(nbPlayer).append(" :");
-	        var name = (String) Ter.ln(str, 2, true);
+	        var name = (String) Ter.ln(str, 2, false);
 	        if (name.isEmpty()) throw new IllegalArgumentException("[Error] initPlayer - Le nom du joueur ne peut pas être vide");
 	        list.add(new Player(name));
 	    }
@@ -72,7 +70,7 @@ public class Game {
 		if(board.getJoueurs().get(currentPlayer).numberMonney() >= 10) return null; // pas plus de 10 jetons
 		
 		var listeJetons = new ArrayList<Money>(board.getJetons().keySet());
-		
+		Ter.space();
 		printMoney(listeJetons);
 		
 		var choix = 0;
@@ -97,7 +95,6 @@ public class Game {
 			
 			if(board.getJetons().get(money) > 3) {
 				map.put(money, 2);
-				Ter.ln("Choix valide, votre liste :"+map.toString());
 				return map;
 			}
 			Ter.ln("Pas assez de jeton");
@@ -110,10 +107,7 @@ public class Game {
 		var map = new HashMap<Money,Integer>();
 		
 		while(true) {
-			if(map.size() == 3) {
-				Ter.ln("Votre liste :"+map.toString());
-				return map;
-			}
+			if(map.size() == 3)return map;
 			
 			var choix = (int) Ter.ln("[Choix] Choisir les trois jetons à prendre :",1,false);
 			if(choix < 0 || choix > listeJetons.size()-1) continue;
@@ -131,11 +125,51 @@ public class Game {
 		}
 	}
 	
+	private void printCard(ArrayList<Card> liste) {
+		var msg = new StringBuilder();
+		for(var i:liste) {
+			
+		}
+	}
+	
+	private Card buyCardEvent(int currentPlayer) {
+		return null;
+		
+	}
+	
+	private Card reserveCardEvent(int currentPlayer) {
+		return null;
+	}
+	
 	public void runner() {
 		var currentPlayer = 0;
 		while(true) {
 			for(var i:board.getJoueurs()) {
-				var mapMoney = moneyEvent(currentPlayer);
+				Ter.space();
+				Ter.ln("Tour du joueur "+board.getJoueurs().get(currentPlayer).getName());
+				i.printStat();
+				
+				var choix = 0;
+				while(choix < 1 || choix > 3) {
+					choix = (int)Ter.ln("[\nChoix] Prendre des jetons (1) ou acheter une carte (2) ou réserver une carte (3) : ",1,false);
+					if(choix == 1) { // prendre des jetons
+						var mapMoney = moneyEvent(currentPlayer);
+						Ter.ln(new StringBuilder().append("\nVous avez pris les jetons : ").append(mapMoney));
+						i.addMoney(mapMoney);
+						board.subMoney(mapMoney);						
+					}
+					if(choix == 2) { // acheter une carte
+						var card = buyCardEvent(currentPlayer);
+						i.addCard(card);
+						// board.subCard(card);
+					}
+					if(choix == 3) {
+						var card = reserveCardEvent(currentPlayer);
+						//i.addReservedCard(card);
+						//board.subCard(card);
+					}
+					
+				}
 
 				currentPlayer++;
 			}

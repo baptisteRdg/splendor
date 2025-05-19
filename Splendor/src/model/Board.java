@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -51,9 +52,8 @@ public class Board {
 		grille = new ArrayList<ArrayList<Card>>();
 		jetons = firstMoney();
 		
-		if(number_player<2 || number_player>4) {
-			throw new IllegalArgumentException("nombre de joueur invalid");
-		}
+		if(number_player<2 || number_player>4) throw new IllegalArgumentException("nombre de joueur invalid");
+
 		number_of_joueur=number_player;
 		this.joueurs=List.copyOf(joueur);
 		for(int i=0;i<4;i+=1) {
@@ -75,7 +75,7 @@ public class Board {
 		for(int i=0;i<number_master;i+=1) {
 			grille.get(3).add(nextCard(4));
 		}
-		}
+	}
 	
 	public HashMap<Money, Integer> getJetons() {
 		return jetons;
@@ -84,4 +84,10 @@ public class Board {
 	public List<Player> getJoueurs() {
 		return joueurs;
 	}
+	
+	public void subMoney(Map<Money, Integer> map) {
+	    Objects.requireNonNull(map);
+	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
+	}
+
 }
