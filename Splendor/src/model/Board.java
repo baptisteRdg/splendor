@@ -66,4 +66,15 @@ public class Board {
 		}
 		jetons=firstMoney();
 		}
+	
+	public Card  getCard(int lig,int col) {
+		if(lig >=5 || lig<0 || col>=5 || col <0) {
+			throw new IllegalArgumentException("les coordonnés ne sont pas valide");
+		}
+		var returned=grille.get(lig).get(col);
+		Objects.requireNonNull(returned);
+		grille.get(lig).remove(col);
+		grille.get(lig).add(col, nextCard(lig));
+		return returned;
+	}
 }
