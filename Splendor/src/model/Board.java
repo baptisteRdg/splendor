@@ -77,6 +77,7 @@ public class Board {
 		}
 	}
 	
+	
 	public HashMap<Money, Integer> getJetons() {
 		return jetons;
 	}
@@ -89,5 +90,15 @@ public class Board {
 	    Objects.requireNonNull(map);
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
 	}
-
+			
+	public Card  takeCard(int lig,int col) {
+		if(lig >=5 || lig<0 || col>=5 || col <0) {
+			throw new IllegalArgumentException("les coordonnés ne sont pas valide");
+		}
+		var returned=grille.get(lig).get(col);
+		Objects.requireNonNull(returned);
+		grille.get(lig).remove(col);
+		grille.get(lig).add(col, nextCard(lig));
+		return returned;
+	}
 }

@@ -125,15 +125,11 @@ public class Game {
 		}
 	}
 	
-	private void printCard(ArrayList<Card> liste) {
-		var msg = new StringBuilder();
-		for(var i:liste) {
-			
-		}
-	}
 	
 	private Card buyCardEvent(int currentPlayer) {
-		return null;
+		board.printGrille
+		
+		return board.takeCard();;
 		
 	}
 	
@@ -161,7 +157,6 @@ public class Game {
 					if(choix == 2) { // acheter une carte
 						var card = buyCardEvent(currentPlayer);
 						i.addCard(card);
-						// board.subCard(card);
 					}
 					if(choix == 3) {
 						var card = reserveCardEvent(currentPlayer);
