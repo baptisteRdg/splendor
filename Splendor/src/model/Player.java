@@ -103,6 +103,16 @@ public class Player {
 		return reserved;
 	}
 	
+	public void addReservedCard(Card card) {
+		Objects.requireNonNull(card);
+		reserved.add(card);
+	}
+	
+	public void deleteReservedCard(Card card) {
+		Objects.requireNonNull(card);
+		reserved.remove(card);
+	}
+	
 	
 	public String getName() {
 		return name;

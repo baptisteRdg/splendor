@@ -8,7 +8,7 @@ public non-sealed class Master implements Card {
 	private final HashMap<Money,Integer> cost;
 	private final String id;
 	
-	Master(int pts,String id,Money money){
+	Master(int pts,String id,HashMap<Money,Integer> cost){
 		Objects.requireNonNull(id);
 		if(pts<0) {
 			throw new IllegalArgumentException("number of points is negatif");

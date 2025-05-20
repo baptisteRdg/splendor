@@ -11,16 +11,17 @@ public non-sealed class Upgrade implements Card{
 	private final HashMap<Money,Integer> cost;
 	
 	
-	public Upgrade(int level,String id,Money money){
+
+	Upgrade(int level,String id,Money money,HashMap<Money,Integer> cost,int pts){
 		Objects.requireNonNull(id);
 		if (level>3 || level<1) {
 			throw new IllegalArgumentException("value on level is out on scope");
 		}
 		this.level=level;
-		this.pts=level;
+		this.pts=pts;
 		this.id=id;
 		this.advantage= money;
-		this.cost= new HashMap<Money,Integer>();
+		this.cost= cost;
 	}
 	
 	public int point() {

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import view.Ter;
+
 
 
 public class Board {
@@ -90,8 +92,40 @@ public class Board {
 	    Objects.requireNonNull(map);
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
 	}
+	
+	public void printGrille() {
+		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
+		for(int i=1;i<5;i++) {
+			msg.append("Ligne ").append(i).append(" | ");
+			var cpt=0;
+			for(var j:grille.get(i)) {
+				msg.append(" ").append(j).append(" (").append(cpt).append(")");
+				cpt++;
+			}
+			msg.append("\n");
+		}
+		Ter.ln(msg);
+	}
 			
-	public Card  takeCard(int lig,int col) {
+	public List<Card> masterPosibility(Player a) {
+		var retour=new ArrayList<Card>();
+		
+		for(var card:grille.get(4-1)) {
+			var flag=1;
+			for(var key: card.cost().keySet()) {
+				if(card.cost().get(key)>a.getMoney().get(key)) {
+					flag=0;
+					break;
+				}
+			}
+			if(flag==1) {
+				retour.add(card);
+			}
+		}
+		return retour;
+	}
+	
+	public Card  getCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0) {
 			throw new IllegalArgumentException("les coordonnés ne sont pas valide");
 		}

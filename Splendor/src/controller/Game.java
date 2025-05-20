@@ -33,11 +33,7 @@ public class Game {
 	private List<Card> initCard(int nbPlayer) {
 		var list = new ArrayList<Card>();
 		
-		list.add(new Upgrade(1, "card 1", Money.DIAMOND));
-		list.add(new Upgrade(1, "card 2", Money.EMERALD));
-		list.add(new Upgrade(2, "card 3", Money.GOLD));
-		list.add(new Upgrade(2, "card 4", Money.ONYX));
-		list.add(new Upgrade(3, "card 5", Money.SAPPHIRE));
+		// ici faire un appel à la génération par CSV
 
 		return list;
 	}
@@ -127,9 +123,10 @@ public class Game {
 	
 	
 	private Card buyCardEvent(int currentPlayer) {
-		board.printGrille
-		
-		return board.takeCard();;
+		board.printGrille();// affiche les cartes
+		var i = (int) Ter.ln("Ligne :",1,false);
+		var j = (int) Ter.ln("Numéro carte:",1,false);
+		return board.getCard(i, j);
 		
 	}
 	
@@ -156,6 +153,7 @@ public class Game {
 					}
 					if(choix == 2) { // acheter une carte
 						var card = buyCardEvent(currentPlayer);
+						
 						i.addCard(card);
 					}
 					if(choix == 3) {
