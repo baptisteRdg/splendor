@@ -18,9 +18,8 @@ public class Board {
 	private final HashMap<Money, Integer> jetons;
 	
 	private Card nextCard(int level) {
-		if(pioches.get(level-1).isEmpty()) {
-			return null;
-		}
+		if(pioches.get(level-1).isEmpty()) return null;
+		
 		var index=(int)(Math.random()*pioches.get(level-1).size());
 		var returned=pioches.get(level-1).get(index);
 		pioches.get(level-1).remove(index);
@@ -88,6 +87,9 @@ public class Board {
 		return joueurs;
 	}
 	
+	public ArrayList<ArrayList<Card>> getGrille(){
+		return grille;
+	}
 	public void subMoney(Map<Money, Integer> map) {
 	    Objects.requireNonNull(map);
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
@@ -95,12 +97,10 @@ public class Board {
 	
 	public void printGrille() {
 		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
-		for(int i=1;i<5;i++) {
+		for(int i=0;i< grille.size();i++) {
 			msg.append("Ligne ").append(i).append(" | ");
-			var cpt=0;
-			for(var j:grille.get(i)) {
-				msg.append(" ").append(j).append(" (").append(cpt).append(")");
-				cpt++;
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
 			}
 			msg.append("\n");
 		}
@@ -132,7 +132,13 @@ public class Board {
 		var returned=grille.get(lig).get(col);
 		Objects.requireNonNull(returned);
 		grille.get(lig).remove(col);
-		grille.get(lig).add(col, nextCard(lig));
+		grille.get(lig).add(col, nextCard(returned.level() ));
 		return returned;
+	}
+	
+	public void removeCard(int lig,int col) {
+		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
+		//grille.get(lig).remove(col);
+		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
 	}
 }

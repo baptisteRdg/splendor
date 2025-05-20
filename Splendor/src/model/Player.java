@@ -72,17 +72,16 @@ public class Player {
 			var key = i.getKey();
 			var value = i.getValue();
 			
-			if(value < 1) throw new IllegalArgumentException("La valeur doit être positive, money"+i);
-			
 			money.merge(key,(0-value),Integer::sum);
 		}
 	}
 	
 	public boolean buy(Card carte) {
 		Objects.requireNonNull(carte);
+		Ter.ln(carte.cost().toString());
+		Ter.ln(money.toString());
 		for(Map.Entry<Money, Integer> i:carte.cost().entrySet()) {
-			if(!money.containsKey(i.getKey()))return false;
-			if(money.get(i.getKey())< i.getValue()) return false;
+			if(money.getOrDefault(i.getKey(),0) < i.getValue())return false; // si pas assez
 		}
 		
 		subMoney(carte.cost());

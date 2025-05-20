@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +31,12 @@ public class Game {
 	
 	
 	/// Permet d'initialiser une liste de carte
-	private List<Card> initCard(int nbPlayer) {
+	private List<Card> initCard(int nbPlayer){
 		var list = new ArrayList<Card>();
-		
-		// ici faire un appel à la génération par CSV
-
+		try {
+			list = CardCsv.cardsList();
+		} 
+		catch (IOException e) {e.printStackTrace();}
 		return list;
 	}
 	
@@ -122,12 +124,21 @@ public class Game {
 	}
 	
 	
-	private Card buyCardEvent(int currentPlayer) {
-		board.printGrille();// affiche les cartes
+	private boolean buyCardEvent(int currentPlayer) {
+		var player = board.getJoueurs().get(currentPlayer);
 		var i = (int) Ter.ln("Ligne :",1,false);
 		var j = (int) Ter.ln("Numéro carte:",1,false);
-		return board.getCard(i, j);
+		var card = board.getGrille().get(i).get(j);
 		
+		Ter.ln("Carte sélectionné "+ card);
+		if(!player.buy(card)) { // pas assez d'argent
+			Ter.ln("\nAchat de la carte impossible\n");
+			return false;
+		}
+		
+		board.removeCard(i, j);
+		player.addCard(card);
+		return true;
 	}
 	
 	private Card reserveCardEvent(int currentPlayer) {
@@ -144,7 +155,7 @@ public class Game {
 				
 				var choix = 0;
 				while(choix < 1 || choix > 3) {
-					choix = (int)Ter.ln("[\nChoix] Prendre des jetons (1) ou acheter une carte (2) ou réserver une carte (3) : ",1,false);
+					choix = (int)Ter.ln("\n[Choix] Prendre des jetons (1) ou acheter une carte (2) ou réserver une carte (3) : ",1,false);
 					if(choix == 1) { // prendre des jetons
 						var mapMoney = moneyEvent(currentPlayer);
 						Ter.ln(new StringBuilder().append("\nVous avez pris les jetons : ").append(mapMoney));
@@ -152,9 +163,8 @@ public class Game {
 						board.subMoney(mapMoney);						
 					}
 					if(choix == 2) { // acheter une carte
-						var card = buyCardEvent(currentPlayer);
-						
-						i.addCard(card);
+						board.printGrille();
+						if(!buyCardEvent(currentPlayer))choix=0; // si pas possible on relance
 					}
 					if(choix == 3) {
 						var card = reserveCardEvent(currentPlayer);
