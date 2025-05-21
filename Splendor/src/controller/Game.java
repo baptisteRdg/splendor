@@ -53,7 +53,30 @@ public class Game {
 	    }
 	    return list;
 	}
-
+	private Card chooseNoble(Player player) {
+		List<Card> lst=board.masterPossibility(player);
+		if( lst.size()==1) {
+			return lst.get(0);
+		}
+		var msg=new StringBuilder("Quelles cartes voulez vous ?\n");
+		for(int i=0;i<lst.size();i++) {
+			msg.append("[").append(i).append("]   ").append(lst.get(i)).append("\n");
+		}
+		int choice=-1;
+		while(choice<0 || choice >=lst.size()){
+			choice=(int)Ter.ln(msg,1,false);
+		}
+		return lst.get(choice);
+	}
+	
+	private void gestionNoble(Player p) {
+		if(board.masterPosibility(p).isEmpty()) {
+			return ;
+		}
+		var card=chooseNoble(p);
+		board.removeMaster(card);
+		p.addCard(card);
+	}
 	
 	
 	private void printMoney(ArrayList<Money> liste) {
@@ -229,7 +252,11 @@ public class Game {
 					}
 					if(choix == 2) {
 						board.printGrille();
-						if(!buyCardEvent(i)) choix = 0;
+						if(!buyCardEvent(i)) {
+							choix = 0;
+							
+						}
+						
 					}
 					if(choix == 3) {
 						Ter.space();
@@ -237,15 +264,20 @@ public class Game {
 						if(!reserveCardEvent(i)) choix = 0;
 					}
 					if(choix == 4) {
-						if(!buyReservedCardEvent(i)) choix = 0;
+						if(!buyReservedCardEvent(i)) {
+							choix = 0;
+							
+						}
 					}
 					
 				}
+				
 				i.update();
 				if(i.getPts() > 0) {
 					Ter.ln("\n Victoire, nous terminons le tour \n");
 					end = true;
 				}
+				gestionNoble(i);
 			}
 		}
 		board.printWinner();
