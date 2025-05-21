@@ -38,19 +38,22 @@ public non-sealed class Master implements Card {
 		return 4;
 	}
 	private String costString() {
-		var ret=new StringBuilder();
-		
+		var ret=new StringBuilder().append("(");
 		for(var a:cost.keySet()) {
-			ret=ret.append(" ").append(a.shortString()).append(": ").append(cost.get(a));
+			if(cost.get(a)>0) {
+			ret=ret.append("").append(a.shortString()).append(":").append(cost.get(a));
 		}
-		
-		return ret.toString();
 	}
+		return ret.append(")").toString();
+}
 	@Override
 	public String toString() {
 		var c=new StringBuilder().append("Nobles pts: "+pts+" cost:"+costString());
 		
-		
+		for(var i=c.length();i<34;i++) {
+			//System.out.println(c.length());
+			c=c.append(" ");
+		}
 		return c.toString();
 	}
 	
