@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sun.nio.sctp.PeerAddressChangeNotification.AddressChangeEvent;
+
 import view.Ter;
 
 public class Player {
@@ -25,6 +27,8 @@ public class Player {
 	/// Carte réservé par le joueur
 	private final Set<Card> reserved = new HashSet<Card>();
 	
+	private final HashMap<Money, Integer> adventage = new HashMap<Money, Integer>();
+	
 	public Player(String nom) {
 		Objects.requireNonNull(nom);
 		name = nom;
@@ -40,6 +44,15 @@ public class Player {
 	
 	public int numberMonney() {
 		return money.values().stream().mapToInt(s->s).sum();
+	}
+	
+	public HashMap<Money, Integer> getAdventage(){
+		return adventage;
+	}
+	
+	public void addAdventage(Map<Money, Integer> upgradeMap) {
+		Objects.requireNonNull(upgradeMap);
+		upgradeMap.forEach((money, value) -> adventage.merge(money, value, Integer::sum));
 	}
 	
 	public int getPts() {
@@ -72,17 +85,16 @@ public class Player {
 			var key = i.getKey();
 			var value = i.getValue();
 			
-			if(value < 1) throw new IllegalArgumentException("La valeur doit être positive, money"+i);
-			
 			money.merge(key,(0-value),Integer::sum);
 		}
 	}
 	
 	public boolean buy(Card carte) {
 		Objects.requireNonNull(carte);
+		Ter.ln(carte.cost().toString());
+		Ter.ln(money.toString());
 		for(Map.Entry<Money, Integer> i:carte.cost().entrySet()) {
-			if(!money.containsKey(i.getKey()))return false;
-			if(money.get(i.getKey())< i.getValue()) return false;
+			if(money.getOrDefault(i.getKey(),0) < i.getValue())return false; // si pas assez
 		}
 		
 		subMoney(carte.cost());
@@ -108,6 +120,8 @@ public class Player {
 		reserved.add(card);
 	}
 	
+	
+	
 	public void deleteReservedCard(Card card) {
 		Objects.requireNonNull(card);
 		reserved.remove(card);
@@ -125,4 +139,6 @@ public class Player {
 				.append("\nRéservé :").append(reserved)
 				);
 	}
+	
+	
 }

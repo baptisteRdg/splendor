@@ -1,10 +1,13 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 
 import view.Ter;
 
@@ -17,10 +20,9 @@ public class Board {
 	private final List<Player> joueurs;
 	private final HashMap<Money, Integer> jetons;
 	
-	private Card nextCard(int level) {
-		if(pioches.get(level-1).isEmpty()) {
-			return null;
-		}
+	public Card nextCard(int level) {
+		if(pioches.get(level-1).isEmpty()) return null;
+		
 		var index=(int)(Math.random()*pioches.get(level-1).size());
 		var returned=pioches.get(level-1).get(index);
 		pioches.get(level-1).remove(index);
@@ -88,6 +90,9 @@ public class Board {
 		return joueurs;
 	}
 	
+	public ArrayList<ArrayList<Card>> getGrille(){
+		return grille;
+	}
 	public void subMoney(Map<Money, Integer> map) {
 	    Objects.requireNonNull(map);
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
@@ -95,15 +100,27 @@ public class Board {
 	
 	public void printGrille() {
 		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
-		for(int i=1;i<5;i++) {
+		for(int i=0;i< grille.size();i++) {
 			msg.append("Ligne ").append(i).append(" | ");
-			var cpt=0;
-			for(var j:grille.get(i)) {
-				msg.append(" ").append(j).append(" (").append(cpt).append(")");
-				cpt++;
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
 			}
 			msg.append("\n");
 		}
+		Ter.ln(msg);
+	}
+	
+	public void printGrilleForReservation() {
+		var msg = new StringBuilder().append("\nVoici les cartes à réservées, vous pouvez aussi réservé des cartes mystères :\n");
+		int i;
+		for(i=0;i< grille.size()-1;i++) {
+			msg.append("  Ligne ").append(i).append(" | ");
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
+			}
+			msg.append("\n");
+		}
+		msg.append("  Pioches mystère | Carte de niveau 1, Carte de niveau 2, Carte de niveau 3\n");
 		Ter.ln(msg);
 	}
 			
@@ -132,7 +149,37 @@ public class Board {
 		var returned=grille.get(lig).get(col);
 		Objects.requireNonNull(returned);
 		grille.get(lig).remove(col);
-		grille.get(lig).add(col, nextCard(lig));
+		grille.get(lig).add(col, nextCard(returned.level() ));
 		return returned;
+	}
+	
+	public void printWinner() {
+		var winner = new ArrayList<Player>();
+		var loser = new ArrayList<Player>();
+		
+		for(var i:joueurs) {
+			if(i.getPts() > 0) winner.add(i);
+			else loser.add(i);
+		}
+        Collections.sort(winner, Comparator.comparingInt(Player::getPts));
+        Collections.sort(loser, Comparator.comparingInt(Player::getPts));
+
+        var msg = new StringBuilder().append("Liste des gagnants :\n");
+        var cpt =1;
+        for(var i:winner) {
+        	msg.append("  - N°").append(cpt).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");cpt++;
+        }
+        msg.append("\nListe des perdants :\n");
+        for(var i:loser) {
+        	msg.append("  - N°").append(cpt).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");cpt++;
+
+        }
+		Ter.space();
+        Ter.ln(msg);
+	}
+	
+	public void removeCard(int lig,int col) {
+		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
+		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
 	}
 }
