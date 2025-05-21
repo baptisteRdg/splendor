@@ -22,6 +22,7 @@ public class CardCsv {
 		case "blue":return Money.SAPPHIRE;
 		default : throw new IllegalArgumentException("Unexpected value: " + money);
 		}
+		
 	}
 	
 	public List<Card> cardsList() throws IOException{
