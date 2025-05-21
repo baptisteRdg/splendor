@@ -8,7 +8,6 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
         // Création du joueur
-        var la=new CardCsv();
-        System.out.println(la.cardsList());
+
     }
 }

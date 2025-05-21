@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import view.Ter;
+
 public class Player {
 
 	/// Nombre de points du joueur
@@ -92,7 +94,7 @@ public class Player {
 	}
 	
 	/// Permet d'ajouter une carte dans les possessions du joueur
-	public void addPossession(Card carte) {
+	public void addCard(Card carte) {
 		Objects.requireNonNull(carte);
 		if(!possession.add(carte))throw new IllegalArgumentException("Carte déjà présente carte:"+carte);
 	}
@@ -114,5 +116,13 @@ public class Player {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void printStat() {
+		Ter.ln(new StringBuilder().append("Points :").append(pts)
+				.append("\nJetons :").append(money)
+				.append("\nPossessions :").append(possession)
+				.append("\nRéservé :").append(reserved)
+				);
 	}
 }

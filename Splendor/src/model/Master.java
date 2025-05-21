@@ -15,7 +15,7 @@ public non-sealed class Master implements Card {
 		}
 		this.pts=pts;
 		this.id=id;
-		this.cost=new HashMap<Money,Integer>();
+		this.cost=cost;
 	}
 	
 	public int point() {
@@ -37,10 +37,21 @@ public non-sealed class Master implements Card {
 	public int level() {
 		return 4;
 	}
-	
+	private String costString() {
+		var ret=new StringBuilder();
+		
+		for(var a:cost.keySet()) {
+			ret=ret.append(" ").append(a.shortString()).append(": ").append(cost.get(a));
+		}
+		
+		return ret.toString();
+	}
 	@Override
 	public String toString() {
-		return "Noble: "+id+" pts:"+pts+" coute "+cost;
+		var c=new StringBuilder().append("Nobles pts: "+pts+" cost:"+costString());
+		
+		
+		return c.toString();
 	}
 	
 }
