@@ -2,7 +2,7 @@ package model;
 
 
 public enum Money {
-
+	
 	EMERALD("Émeraude"),
 	SAPPHIRE("Saphir"),
 	DIAMOND("Diamant"),
@@ -19,12 +19,12 @@ public enum Money {
 	
 	public String shortString() {
 		switch (this) {
-		case EMERALD: return "E";
-		case SAPPHIRE: return "S";
-		case DIAMOND: return "D";
-		case RUBY: return "R";
-		case ONYX: return "O";
-		case GOLD: return "G";
+		case EMERALD: return "🟢";
+        case SAPPHIRE: return "🟣";
+        case DIAMOND: return "🔵";
+        case RUBY: return "🔴";
+        case ONYX: return "⚫️";
+        case GOLD: return "🟡";
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + this);
 		}

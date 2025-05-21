@@ -41,18 +41,24 @@ public non-sealed class Upgrade implements Card{
 	public String id() {
 		return id;
 	}
+	
+	
 	private String costString() {
-		var ret=new StringBuilder();
+		var ret=new StringBuilder().append("(");
 		for(var a:cost.keySet()) {
-			ret=ret.append(" ").append(a.shortString()).append(": ").append(cost.get(a));
+			if(cost.get(a)>0) {
+			ret=ret.append("").append(a.shortString()).append(":").append(cost.get(a));
 		}
-		
-		return ret.toString();
 	}
+		return ret.append(")").toString();
+}
 	@Override
 	public String toString() {
-		var c=new StringBuilder().append("U: "+level+" P: "+pts+" A:"+advantage.shortString()+" cost:"+costString());
-		
+		var c=new StringBuilder().append("P: "+pts+" A:"+advantage.shortString()+" cost:"+costString());
+		for(var i=c.length();i<34;i++) {
+			//System.out.println(c.length());
+			c=c.append(" ");
+		}
 		
 		return c.toString();
 	}
