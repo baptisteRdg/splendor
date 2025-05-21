@@ -154,14 +154,36 @@ public class Game {
 			Ter.ln("\n[Action refusé] Vous ne pouvez plus rajouter de réservation\n");
 			return false;
 		}
-		// choix de l'utilisateur
-		var i = (int) Ter.ln("Ligne :",1,false);
-		var j = (int) Ter.ln("Numéro carte:",1,false);
-		var card = board.getGrille().get(i).get(j);
+		var choix = -2;
+		while(choix < -1 || choix > 1) {
+			choix = (int) Ter.ln("Réservé une carte mystère ou une du plateau ? Retour(-1)  Plateau(0)  Mystère(1) :", 1, false);
+			if(choix==-1)return false;
+			if(choix==0) {
+				var i = -1;
+				var j = -1;
+				while((i < 0 || i > 2) || j < 0 || j > 4) {
+					 i = (int) Ter.ln("Ligne :",1,false);
+					 j = (int) Ter.ln("Numéro carte:",1,false);
+				}
+				var card = board.getGrille().get(i).get(j);
+				
+				player.addReservedCard(card);// ajoute dans les cartes réservées du joueur
+				board.removeCard(i, j);// retire et remplace la carte du plateau
+				return true;
+			}
+			if(choix==1) {
+				var i = 0;
+				while(i<1 || i>3) {
+					i = (int) Ter.ln("Niveau de la carte :",1,false);
+				}
+				var card = board.nextCard(i);
+				player.addReservedCard(card);
+				return true;	
+			}
+		}
 		
-		player.addReservedCard(card);// ajoute dans les cartes réservées du joueur
-		board.removeCard(i, j);// retire et remplace la carte du plateau
 		return true;
+		
 	}
 	
 	private boolean buyReservedCardEvent(Player player) {
@@ -209,7 +231,8 @@ public class Game {
 						if(!buyCardEvent(i)) choix = 0;
 					}
 					if(choix == 3) {
-						board.printGrille();
+						Ter.space();
+						board.printGrilleForReservation();
 						if(!reserveCardEvent(i)) choix = 0;
 					}
 					if(choix == 4) {
@@ -222,11 +245,9 @@ public class Game {
 					Ter.ln("\n Victoire, nous terminons le tour \n");
 					end = true;
 				}
-
 			}
-			
-			board.printWinner();
 		}
+		board.printWinner();
 	}
 	
 	

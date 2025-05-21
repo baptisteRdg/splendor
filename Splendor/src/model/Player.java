@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.sun.nio.sctp.PeerAddressChangeNotification.AddressChangeEvent;
+
 import view.Ter;
 
 public class Player {
@@ -25,6 +27,8 @@ public class Player {
 	/// Carte réservé par le joueur
 	private final Set<Card> reserved = new HashSet<Card>();
 	
+	private final HashMap<Money, Integer> adventage = new HashMap<Money, Integer>();
+	
 	public Player(String nom) {
 		Objects.requireNonNull(nom);
 		name = nom;
@@ -40,6 +44,15 @@ public class Player {
 	
 	public int numberMonney() {
 		return money.values().stream().mapToInt(s->s).sum();
+	}
+	
+	public HashMap<Money, Integer> getAdventage(){
+		return adventage;
+	}
+	
+	public void addAdventage(Map<Money, Integer> upgradeMap) {
+		Objects.requireNonNull(upgradeMap);
+		upgradeMap.forEach((money, value) -> adventage.merge(money, value, Integer::sum));
 	}
 	
 	public int getPts() {

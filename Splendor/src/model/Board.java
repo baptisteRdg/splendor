@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 import view.Ter;
 
 
@@ -19,7 +20,7 @@ public class Board {
 	private final List<Player> joueurs;
 	private final HashMap<Money, Integer> jetons;
 	
-	private Card nextCard(int level) {
+	public Card nextCard(int level) {
 		if(pioches.get(level-1).isEmpty()) return null;
 		
 		var index=(int)(Math.random()*pioches.get(level-1).size());
@@ -106,6 +107,20 @@ public class Board {
 			}
 			msg.append("\n");
 		}
+		Ter.ln(msg);
+	}
+	
+	public void printGrilleForReservation() {
+		var msg = new StringBuilder().append("\nVoici les cartes à réservées, vous pouvez aussi réservé des cartes mystères :\n");
+		int i;
+		for(i=0;i< grille.size()-1;i++) {
+			msg.append("  Ligne ").append(i).append(" | ");
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
+			}
+			msg.append("\n");
+		}
+		msg.append("  Pioches mystère | Carte de niveau 1, Carte de niveau 2, Carte de niveau 3\n");
 		Ter.ln(msg);
 	}
 			
