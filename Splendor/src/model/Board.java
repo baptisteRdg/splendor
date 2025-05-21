@@ -150,13 +150,13 @@ public class Board {
         Collections.sort(loser, Comparator.comparingInt(Player::getPts));
 
         var msg = new StringBuilder().append("Liste des gagnants :\n");
-        var cpt =0;
+        var cpt =1;
         for(var i:winner) {
-        	msg.append("   N°").append(cpt++).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");
+        	msg.append("  - N°").append(cpt).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");cpt++;
         }
-        msg.append("\n Liste des perdants :\n");
+        msg.append("\nListe des perdants :\n");
         for(var i:loser) {
-        	msg.append("   N°").append(cpt++).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");
+        	msg.append("  - N°").append(cpt).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");cpt++;
 
         }
 		Ter.space();

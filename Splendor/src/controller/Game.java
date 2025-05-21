@@ -64,33 +64,41 @@ public class Game {
 		Ter.ln(msg);
 	}
 	
-	private Map<Money,Integer> moneyEvent(Player player) {
-		if(player.numberMonney() >= 10) return null; // pas plus de 10 jetons
+	private boolean moneyEvent(Player player) {
+		if(player.numberMonney() >= 10) return false; // pas plus de 10 jetons
 		
 		var listeJetons = new ArrayList<Money>(board.getJetons().keySet());
 		Ter.space();
 		printMoney(listeJetons);
 		
 		var choix = 0;
+		var mapMoney = new HashMap<Money,Integer>();
 		while(choix != 1 && choix != 2) {
-			choix = (int) Ter.ln("[Choix] Choisir Trois jetons différents (1) ou deux fois le même ?(2) :",1,false);
-			if(choix==1) return choseDifferentMoney(listeJetons);
-			if(choix==2) return choseOneMoney(listeJetons);
+			choix = (int) Ter.ln("[Choix] Retour (0) Choisir Trois jetons différents (1) ou deux fois le même ?(2) :",1,false);
+			if(choix==0) return false;
+			if(choix==1) mapMoney.putAll(choseDifferentMoney(listeJetons));
+			if(choix==2) mapMoney.putAll(choseOneMoney(listeJetons));
 		}
-		return null;
+		
+		if(mapMoney.isEmpty())return false;
+		
+		player.addMoney(mapMoney);
+		board.subMoney(mapMoney);
+		Ter.ln(new StringBuilder().append("\n[] Vous avez pris les jetons : ").append(mapMoney));
+		return true;
 	}
 	
 	private Map<Money,Integer> choseOneMoney(ArrayList<Money> listeJetons){
-		/// ici faire en soter de retirer trois jetons différents
-		
 		Ter.space();printMoney(listeJetons);
 		
 		var map = new HashMap<Money,Integer>();
 		
 		while(true) {
-			var choix = (int) Ter.ln("Jetons à prendre (index) : ", 1, true);
+			var choix = (int) Ter.ln("Retour(-1), N° du jetons à prendre : ", 1, true);
+			if(choix < -1 || choix > listeJetons.size())continue; // vérification si c'est une possibilité
+			if(choix == -1)return map;
+
 			var money = listeJetons.get(choix);
-			
 			if(board.getJetons().get(money) > 3) {
 				map.put(money, 2);
 				return map;
@@ -107,10 +115,11 @@ public class Game {
 		while(true) {
 			if(map.size() == 3)return map;
 			
-			var choix = (int) Ter.ln("[Choix] Choisir les trois jetons à prendre :",1,false);
-			if(choix < 0 || choix > listeJetons.size()-1) continue;
+			var choix = (int) Ter.ln("[Choix] Retour (-1) Choisir les trois jetons à prendre :",1,false);
+			if(choix < -1 || choix > listeJetons.size()-1) continue;
+			if(choix == -1)return map;
+
 			var money = listeJetons.get(choix);
-			
 			if(board.getJetons().get(money) > 0) { // au moins un jeton
 				if(map.putIfAbsent(money, 1) == null) {// si pas déjà présent dans la liste
 					Ter.ln("choix valide");
@@ -193,14 +202,11 @@ public class Game {
 				while(choix < 1 || choix > 4) {
 					choix = (int)Ter.ln("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ",1,false);
 					if(choix == 1) { // prendre des jetons
-						var mapMoney = moneyEvent(i);
-						Ter.ln(new StringBuilder().append("\nVous avez pris les jetons : ").append(mapMoney));
-						i.addMoney(mapMoney);
-						board.subMoney(mapMoney);						
+						if(!moneyEvent(i)) choix = 0;
 					}
-					if(choix == 2) { // acheter une carte
+					if(choix == 2) {
 						board.printGrille();
-						if(!buyCardEvent(i)) choix = 0; // si pas possible on relance
+						if(!buyCardEvent(i)) choix = 0;
 					}
 					if(choix == 3) {
 						board.printGrille();
