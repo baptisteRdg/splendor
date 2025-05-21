@@ -29,7 +29,17 @@ public class Board {
 		return returned;
 		
 	}
-	
+	public List<Card> masterPosibility(Player a) {
+		var retour=new ArrayList<Card>();
+		
+		for(var card:grille.get(3)) {
+			
+			if(a.toJoin(card)) {
+				retour.add(card);
+			}
+		}
+		return retour;
+	}
 	private HashMap<Money, Integer> firstMoney(){
 		var tmp=new HashMap<Money, Integer>();
 		int retired=0;
@@ -98,6 +108,16 @@ public class Board {
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
 	}
 	
+	public List<Card> masterPossibility(Player p){
+		var tmp=new ArrayList<Card>();
+		for(var a:grille.get(3)) {
+			if(p.toJoin(a)) {
+				tmp.add(a);
+			}
+		}
+		return tmp;
+	}
+	
 	public void printGrille() {
 		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
 		for(int i=0;i< grille.size();i++) {
@@ -124,23 +144,7 @@ public class Board {
 		Ter.ln(msg);
 	}
 			
-	public List<Card> masterPosibility(Player a) {
-		var retour=new ArrayList<Card>();
-		
-		for(var card:grille.get(4-1)) {
-			var flag=1;
-			for(var key: card.cost().keySet()) {
-				if(card.cost().get(key)>a.getMoney().get(key)) {
-					flag=0;
-					break;
-				}
-			}
-			if(flag==1) {
-				retour.add(card);
-			}
-		}
-		return retour;
-	}
+	
 	
 	public Card  getCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0) {
@@ -181,5 +185,11 @@ public class Board {
 	public void removeCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
 		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
+	}
+	
+	public void removeMaster(Card card) {
+		Objects.requireNonNull(card);
+		grille.get(3).remove(card);
+		grille.get(3).add(nextCard(card.level()));
 	}
 }

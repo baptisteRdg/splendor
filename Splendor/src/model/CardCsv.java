@@ -26,7 +26,7 @@ public final class CardCsv {
 	
 	public static ArrayList<Card> cardsList() throws IOException{
 		var cards = new ArrayList<Card>();
-		var path= Paths.get("/home/baptiste/Bureau/splendor/card2.csv");
+		var path= Paths.get("/home/paul/Documents/semestre 2/java/splendor/Splendor/src/model/card2.csv");
 		var is= Files.newInputStream(path);
 		var buffer=new BufferedReader(new InputStreamReader(is));
 		String line=buffer.readLine();//suppression du header

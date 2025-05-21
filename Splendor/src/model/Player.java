@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.sun.nio.sctp.PeerAddressChangeNotification.AddressChangeEvent;
 
 import view.Ter;
 
@@ -120,7 +119,15 @@ public class Player {
 		reserved.add(card);
 	}
 	
-	
+	public boolean toJoin(Card a2) {
+		Objects.requireNonNull(a2);
+		for(var sou: a2.cost().keySet()) {
+			if(a2.cost().get(sou)>adventage.getOrDefault(money,0)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	public void deleteReservedCard(Card card) {
 		Objects.requireNonNull(card);
