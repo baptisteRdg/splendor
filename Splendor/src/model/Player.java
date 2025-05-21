@@ -50,10 +50,10 @@ public class Player {
 		return adventage;
 	}
 	
-	public void addAdventage(Map<Money, Integer> upgradeMap) {
-		Objects.requireNonNull(upgradeMap);
-		upgradeMap.forEach((money, value) -> adventage.merge(money, value, Integer::sum));
+	public void addAdventage(Money money) {
+	    adventage.put(money, adventage.getOrDefault(money, 0) + 1);
 	}
+
 	
 	public int getPts() {
 		return pts;
@@ -83,7 +83,9 @@ public class Player {
 		Objects.requireNonNull(price);
 		for(Map.Entry<Money, Integer> i:price.entrySet()) {
 			var key = i.getKey();
-			var value = i.getValue();
+			var adv = adventage.getOrDefault(key, 0); // aventage
+			var value = i.getValue() - adv;
+			if(value<0) value = 0; // pas de prix négatif
 			
 			money.merge(key,(0-value),Integer::sum);
 		}
@@ -93,11 +95,14 @@ public class Player {
 		Objects.requireNonNull(carte);
 		Ter.ln(carte.cost().toString());
 		Ter.ln(money.toString());
+		
 		for(Map.Entry<Money, Integer> i:carte.cost().entrySet()) {
-			if(money.getOrDefault(i.getKey(),0) < i.getValue())return false; // si pas assez
+			var adv = adventage.getOrDefault(i.getKey(), 0); // aventage
+			if( money.getOrDefault(i.getKey(),0) + adv < i.getValue())return false; // si pas assez
 		}
 		
 		subMoney(carte.cost());
+		addAdventage(carte.advantage());
 		return true;
 	}
 	
