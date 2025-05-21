@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+
 import view.Ter;
 
 public class Player {
@@ -25,6 +26,8 @@ public class Player {
 	/// Carte réservé par le joueur
 	private final Set<Card> reserved = new HashSet<Card>();
 	
+	private final HashMap<Money, Integer> adventage = new HashMap<Money, Integer>();
+	
 	public Player(String nom) {
 		Objects.requireNonNull(nom);
 		name = nom;
@@ -41,6 +44,15 @@ public class Player {
 	public int numberMonney() {
 		return money.values().stream().mapToInt(s->s).sum();
 	}
+	
+	public HashMap<Money, Integer> getAdventage(){
+		return adventage;
+	}
+	
+	public void addAdventage(Money money) {
+	    adventage.put(money, adventage.getOrDefault(money, 0) + 1);
+	}
+
 	
 	public int getPts() {
 		return pts;
@@ -70,9 +82,9 @@ public class Player {
 		Objects.requireNonNull(price);
 		for(Map.Entry<Money, Integer> i:price.entrySet()) {
 			var key = i.getKey();
-			var value = i.getValue();
-			
-			if(value < 1) throw new IllegalArgumentException("La valeur doit être positive, money"+i);
+			var adv = adventage.getOrDefault(key, 0); // aventage
+			var value = i.getValue() - adv;
+			if(value<0) value = 0; // pas de prix négatif
 			
 			money.merge(key,(0-value),Integer::sum);
 		}
@@ -80,12 +92,16 @@ public class Player {
 	
 	public boolean buy(Card carte) {
 		Objects.requireNonNull(carte);
+		Ter.ln(carte.cost().toString());
+		Ter.ln(money.toString());
+		
 		for(Map.Entry<Money, Integer> i:carte.cost().entrySet()) {
-			if(!money.containsKey(i.getKey()))return false;
-			if(money.get(i.getKey())< i.getValue()) return false;
+			var adv = adventage.getOrDefault(i.getKey(), 0); // aventage
+			if( money.getOrDefault(i.getKey(),0) + adv < i.getValue())return false; // si pas assez
 		}
 		
 		subMoney(carte.cost());
+		addAdventage(carte.advantage());
 		return true;
 	}
 	
@@ -108,6 +124,16 @@ public class Player {
 		reserved.add(card);
 	}
 	
+	public boolean toJoin(Card a2) {
+		Objects.requireNonNull(a2);
+		for(var sou: a2.cost().keySet()) {
+			if(a2.cost().get(sou)>adventage.getOrDefault(money,0)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void deleteReservedCard(Card card) {
 		Objects.requireNonNull(card);
 		reserved.remove(card);
@@ -125,4 +151,6 @@ public class Player {
 				.append("\nRéservé :").append(reserved)
 				);
 	}
+	
+	
 }
