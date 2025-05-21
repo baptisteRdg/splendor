@@ -107,6 +107,8 @@ public class Player {
 		reserved.add(card);
 	}
 	
+	
+	
 	public void deleteReservedCard(Card card) {
 		Objects.requireNonNull(card);
 		reserved.remove(card);
@@ -124,4 +126,6 @@ public class Player {
 				.append("\nRéservé :").append(reserved)
 				);
 	}
+	
+	
 }

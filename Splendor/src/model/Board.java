@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,9 +138,33 @@ public class Board {
 		return returned;
 	}
 	
+	public void printWinner() {
+		var winner = new ArrayList<Player>();
+		var loser = new ArrayList<Player>();
+		
+		for(var i:joueurs) {
+			if(i.getPts() > 0) winner.add(i);
+			else loser.add(i);
+		}
+        Collections.sort(winner, Comparator.comparingInt(Player::getPts));
+        Collections.sort(loser, Comparator.comparingInt(Player::getPts));
+
+        var msg = new StringBuilder().append("Liste des gagnants :\n");
+        var cpt =0;
+        for(var i:winner) {
+        	msg.append("   N°").append(cpt++).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");
+        }
+        msg.append("\n Liste des perdants :\n");
+        for(var i:loser) {
+        	msg.append("   N°").append(cpt++).append("  ").append(i.getName()).append("  pts:").append(i.getPts()).append("\n");
+
+        }
+		Ter.space();
+        Ter.ln(msg);
+	}
+	
 	public void removeCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
-		//grille.get(lig).remove(col);
 		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
 	}
 }

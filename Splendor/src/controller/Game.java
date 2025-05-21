@@ -48,7 +48,7 @@ public class Game {
 	    for(int i = 0; i < nbPlayer; i++) {
 	        var str = new StringBuilder().append(msg).append(i+1).append("/").append(nbPlayer).append(" :");
 	        var name = (String) Ter.ln(str, 2, false);
-	        if (name.isEmpty()) throw new IllegalArgumentException("[Error] initPlayer - Le nom du joueur ne peut pas être vide");
+	        if (name.isEmpty()) throw new IllegalArgumentException("[Erreur] initPlayer - Le nom du joueur ne peut pas être vide");
 	        list.add(new Player(name));
 	    }
 	    return list;
@@ -64,8 +64,8 @@ public class Game {
 		Ter.ln(msg);
 	}
 	
-	private Map<Money,Integer> moneyEvent(int currentPlayer) {
-		if(board.getJoueurs().get(currentPlayer).numberMonney() >= 10) return null; // pas plus de 10 jetons
+	private Map<Money,Integer> moneyEvent(Player player) {
+		if(player.numberMonney() >= 10) return null; // pas plus de 10 jetons
 		
 		var listeJetons = new ArrayList<Money>(board.getJetons().keySet());
 		Ter.space();
@@ -124,59 +124,102 @@ public class Game {
 	}
 	
 	
-	private boolean buyCardEvent(int currentPlayer) {
-		var player = board.getJoueurs().get(currentPlayer);
+	private boolean buyCardEvent(Player player) {
 		var i = (int) Ter.ln("Ligne :",1,false);
 		var j = (int) Ter.ln("Numéro carte:",1,false);
 		var card = board.getGrille().get(i).get(j);
 		
 		Ter.ln("Carte sélectionné "+ card);
 		if(!player.buy(card)) { // pas assez d'argent
-			Ter.ln("\nAchat de la carte impossible\n");
+			Ter.ln("\n[Refusé] Achat de la carte impossible\n");
 			return false;
 		}
-		
-		board.removeCard(i, j);
-		player.addCard(card);
+		Ter.ln("\nAchat de la carte validé");
+		player.addCard(card);// ajoute la carte dans les possessions du joueur
+		board.removeCard(i, j); // retire et remplace la carte du plateau
 		return true;
 	}
 	
-	private Card reserveCardEvent(int currentPlayer) {
-		return null;
+	private boolean reserveCardEvent(Player player) {
+		if(player.getReserved().size() > 2) { // si déjà trois cartes réservées
+			Ter.ln("\n[Action refusé] Vous ne pouvez plus rajouter de réservation\n");
+			return false;
+		}
+		// choix de l'utilisateur
+		var i = (int) Ter.ln("Ligne :",1,false);
+		var j = (int) Ter.ln("Numéro carte:",1,false);
+		var card = board.getGrille().get(i).get(j);
+		
+		player.addReservedCard(card);// ajoute dans les cartes réservées du joueur
+		board.removeCard(i, j);// retire et remplace la carte du plateau
+		return true;
+	}
+	
+	private boolean buyReservedCardEvent(Player player) {
+		var list = new ArrayList<Card>(player.getReserved());
+		
+		if(list.size() < 1) {
+			Ter.ln("\n[Refusé] Vous n'avez pas de carte réservé\n");return false;
+		}
+		var msg = new StringBuilder().append("\nVoici vos réservations :\n");
+		for(int i=0; i<list.size();i++) {
+			msg.append("n°").append(i).append("  ").append(list.get(i)).append("\n");
+		}
+		Ter.ln(msg);
+		
+		var choix = 0;
+		while(choix<0 || choix > list.size()) {
+			choix = (int) Ter.ln("[Action] Choisir la carte à acheter :",1,false);
+		}
+		var card = list.get(choix);
+		if(!player.buy(card)) {
+			Ter.ln("\n[Refusé] Achat de la carte impossible\n");
+			return false;
+		}
+		player.addCard(card);
+		player.getReserved().remove(card);
+		return true;
 	}
 	
 	public void runner() {
-		var currentPlayer = 0;
-		while(true) {
+		var end = false;
+		while(true && !end) {
 			for(var i:board.getJoueurs()) {
 				Ter.space();
-				Ter.ln("Tour du joueur "+board.getJoueurs().get(currentPlayer).getName());
+				Ter.ln("Tour du joueur "+i.getName());
 				i.printStat();
 				
 				var choix = 0;
-				while(choix < 1 || choix > 3) {
-					choix = (int)Ter.ln("\n[Choix] Prendre des jetons (1) ou acheter une carte (2) ou réserver une carte (3) : ",1,false);
+				while(choix < 1 || choix > 4) {
+					choix = (int)Ter.ln("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ",1,false);
 					if(choix == 1) { // prendre des jetons
-						var mapMoney = moneyEvent(currentPlayer);
+						var mapMoney = moneyEvent(i);
 						Ter.ln(new StringBuilder().append("\nVous avez pris les jetons : ").append(mapMoney));
 						i.addMoney(mapMoney);
 						board.subMoney(mapMoney);						
 					}
 					if(choix == 2) { // acheter une carte
 						board.printGrille();
-						if(!buyCardEvent(currentPlayer))choix=0; // si pas possible on relance
+						if(!buyCardEvent(i)) choix = 0; // si pas possible on relance
 					}
 					if(choix == 3) {
-						var card = reserveCardEvent(currentPlayer);
-						//i.addReservedCard(card);
-						//board.subCard(card);
+						board.printGrille();
+						if(!reserveCardEvent(i)) choix = 0;
+					}
+					if(choix == 4) {
+						if(!buyReservedCardEvent(i)) choix = 0;
 					}
 					
 				}
+				i.update();
+				if(i.getPts() > 0) {
+					Ter.ln("\n Victoire, nous terminons le tour \n");
+					end = true;
+				}
 
-				currentPlayer++;
 			}
-			currentPlayer=0;
+			
+			board.printWinner();
 		}
 	}
 	
