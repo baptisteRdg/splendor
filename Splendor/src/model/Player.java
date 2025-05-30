@@ -78,16 +78,18 @@ public class Player {
 	}
 	
 	
-	private void subMoney(Map<Money,Integer> price) {
+	private Map<Money,Integer> subMoney(Map<Money,Integer> price) {
 		Objects.requireNonNull(price);
+		var remis=new HashMap<Money, Integer>();
 		for(Map.Entry<Money, Integer> i:price.entrySet()) {
 			var key = i.getKey();
 			var adv = adventage.getOrDefault(key, 0); // aventage
 			var value = i.getValue() - adv;
 			if(value<0) value = 0; // pas de prix négatif
-			
+			remis.put(key, value);
 			money.merge(key,(0-value),Integer::sum);
 		}
+		return remis;
 	}
 	
 	public boolean buy(Card carte) {

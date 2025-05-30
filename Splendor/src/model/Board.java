@@ -192,4 +192,18 @@ public class Board {
 		grille.get(3).remove(card);
 		grille.get(3).add(nextCard(card.level()));
 	}
+	
+	public void addMoney(Map<Money,Integer> newMoney) {
+		Objects.requireNonNull(newMoney);
+		
+		for(Map.Entry<Money,Integer> i:newMoney.entrySet()) {
+			var key = i.getKey();
+			var value = i.getValue();
+			
+			if(value < 0) {
+				throw new IllegalArgumentException("La valeur doit être positive money:"+i);
+			}
+			jetons.merge(key,value,Integer::sum);
+		}		
+	}
 }

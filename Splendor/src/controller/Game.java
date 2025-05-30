@@ -81,7 +81,7 @@ public class Game {
 	
 	private void printMoney(ArrayList<Money> liste) {
 		var msg = new StringBuilder().append("Liste des jetons :\n");
-		for(int i=0;i<liste.size();i++) {
+		for(int i=0;i<liste.size()-1;i++) {
 			msg.append("[").append(i).append("]   ").append(liste.get(i)).append(" : ").append(board.getJetons().get(liste.get(i))).append("\n");
 		}
 		Ter.ln(msg);
@@ -118,11 +118,11 @@ public class Game {
 		
 		while(true) {
 			var choix = (int) Ter.ln("Retour(-1), N° du jetons à prendre : ", 1, true);
-			if(choix < -1 || choix > listeJetons.size())continue; // vérification si c'est une possibilité
+			if(choix < -1 || choix >= listeJetons.size()-1)continue; // vérification si c'est une possibilité
 			if(choix == -1)return map;
 
 			var money = listeJetons.get(choix);
-			if(board.getJetons().get(money) > 3) {
+			if(board.getJetons().get(money) > 3) {//regle du jeux specifique
 				map.put(money, 2);
 				return map;
 			}
@@ -139,7 +139,7 @@ public class Game {
 			if(map.size() == 3)return map;
 			
 			var choix = (int) Ter.ln("[Choix] Retour (-1) Choisir les trois jetons à prendre :",1,false);
-			if(choix < -1 || choix > listeJetons.size()-1) continue;
+			if(choix < -1 || choix >= listeJetons.size()-1) continue;
 			if(choix == -1)return map;
 
 			var money = listeJetons.get(choix);
@@ -201,6 +201,9 @@ public class Game {
 				}
 				var card = board.nextCard(i);
 				player.addReservedCard(card);
+				var gold=new HashMap<Money, Integer>();
+				gold.put(Money.GOLD,1);
+				player.addMoney(gold);
 				return true;	
 			}
 		}
