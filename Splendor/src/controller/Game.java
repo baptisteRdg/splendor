@@ -182,9 +182,18 @@ public class Game {
 	
 	
 	private boolean buyCardEvent(Player player) {
+		Objects.requireNonNull(player);
+		
+		board.printGrilleBuy();
+		
+		var listCard = board.getGrilleUpdate();
 		var i = (int) Ter.ln("Ligne :",1,false);
 		var j = (int) Ter.ln("Numéro carte:",1,false);
-		var card = board.getGrille().get(i).get(j);
+		
+		if(i < 0 || i > listCard.size()-1)return false;
+		if( j < 0 || j > listCard.get(i).size()-1)return false;
+		
+		var card = listCard.get(i).get(j);
 		
 		Ter.ln("Carte sélectionné "+ card);
 		if(!player.buy(card)) { // pas assez d'argent
@@ -290,7 +299,6 @@ public class Game {
 						if(!moneyEvent(i)) choix = 0;
 					}
 					if(choix == 2) {
-						board.printGrille();
 						if(!buyCardEvent(i))choix = 0;
 					}
 					if(choix == 3) {

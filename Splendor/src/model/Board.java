@@ -105,6 +105,15 @@ public class Board {
 	public ArrayList<ArrayList<Card>> getGrille(){
 		return grille;
 	}
+	
+	public ArrayList<ArrayList<Card>> getGrilleUpdate(){
+		var list = new ArrayList<ArrayList<Card>>(grille);
+		list.remove(3);
+		return list;
+	}
+	
+	
+	
 	/*
 	public void subMoney(Map<Money, Integer> map) {
 	    Objects.requireNonNull(map);
@@ -123,11 +132,24 @@ public class Board {
 	}
 	
 	public void printGrille() {
-		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
+		var msg = new StringBuilder().append("Voici le plateau de jeu\n");
 		for(int i=0;i< grille.size();i++) {
 			msg.append("Ligne ").append(i).append(" | ");
 			for(int j=0;j< grille.get(i).size();j++) {
 				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
+			}
+			msg.append("\n");
+		}
+		Ter.ln(msg);
+	}
+	
+	public void printGrilleBuy() {
+		var msg = new StringBuilder().append("Sélectionner les coordonnées de la carte à acheter\n");
+		var list = getGrilleUpdate();
+		for(int i=0;i< list.size();i++) {
+			msg.append("Ligne ").append(i).append(" | ");
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(list.get(i).get(j)).append(")");
 			}
 			msg.append("\n");
 		}
