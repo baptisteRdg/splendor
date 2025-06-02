@@ -18,7 +18,8 @@ public class Board {
 	private final ArrayList<ArrayList<Card>> pioches;
 	private final ArrayList<ArrayList<Card>> grille;
 	private final List<Player> joueurs;
-	private final HashMap<Money, Integer> jetons;
+	//private final HashMap<Money, Integer> jetons;
+	private final Bank jetons = new Bank();
 	
 	public Card nextCard(int level) {
 		if(pioches.get(level-1).isEmpty()) return null;
@@ -40,7 +41,7 @@ public class Board {
 		}
 		return retour;
 	}
-	private HashMap<Money, Integer> firstMoney(){
+	private void firstMoney(){
 		var tmp=new HashMap<Money, Integer>();
 		int retired=0;
 		if(number_of_joueur==2) {
@@ -55,7 +56,8 @@ public class Board {
 		tmp.put(Money.ONYX,7-retired);
 		tmp.put(Money.RUBY,7-retired);
 		tmp.put(Money.SAPPHIRE,7-retired);
-		return tmp;
+		
+		jetons.add(tmp);
 	}
 	
 	public Board(int number_player,List<Player> joueur,List<Card> cards){
@@ -64,7 +66,7 @@ public class Board {
 		
 		pioches = new ArrayList<ArrayList<Card>>();
 		grille = new ArrayList<ArrayList<Card>>();
-		jetons = firstMoney();
+		firstMoney();
 		
 		if(number_player<2 || number_player>4) throw new IllegalArgumentException("nombre de joueur invalid");
 
@@ -92,7 +94,7 @@ public class Board {
 	}
 	
 	
-	public HashMap<Money, Integer> getJetons() {
+	public Bank getJetons() {
 		return jetons;
 	}
 	
@@ -103,10 +105,12 @@ public class Board {
 	public ArrayList<ArrayList<Card>> getGrille(){
 		return grille;
 	}
+	/*
 	public void subMoney(Map<Money, Integer> map) {
 	    Objects.requireNonNull(map);
 	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
 	}
+	*/
 	
 	public List<Card> masterPossibility(Player p){
 		var tmp=new ArrayList<Card>();
@@ -193,6 +197,7 @@ public class Board {
 		grille.get(3).add(nextCard(card.level()));
 	}
 	
+	/*
 	public void addMoney(Map<Money,Integer> newMoney) {
 		Objects.requireNonNull(newMoney);
 		
@@ -206,4 +211,5 @@ public class Board {
 			jetons.merge(key,value,Integer::sum);
 		}		
 	}
+	*/
 }
