@@ -6,8 +6,6 @@ public final class Ter {
     // Scanner partagé et statique
     private static final Scanner scanner = new Scanner(System.in);
 
-  
-
     // Retour à la ligne
     public static void ln() {
         System.out.println();

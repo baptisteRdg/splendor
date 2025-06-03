@@ -18,16 +18,11 @@ public class Player {
 	/// nom du joueur
 	private final String name;
 	
-	/// Collection des jetons du joueur
-	//private final Map<Money, Integer> money = new HashMap<Money, Integer>();
-	
 	/// Cartes que le joueur possède
 	private final Set<Card> possession = new HashSet<Card>();
 	
 	/// Carte réservé par le joueur
 	private final Set<Card> reserved = new HashSet<Card>();
-	
-	//private final HashMap<Money, Integer> adventage = new HashMap<Money, Integer>();
 	
 	private final Bank advantages = new Bank();
 	private final Bank bank = new Bank();
@@ -53,16 +48,6 @@ public class Player {
 		}
 	}
 	
-	/*public int numberMonney() {
-		return money.values().stream().mapToInt(s->s).sum();
-	}
-	
-	
-	
-	public HashMap<Money, Integer> getAdventage(){
-		return adventage;
-	}
-	*/
 	public void addAdvantage(Money money) {
 		var adventage = new HashMap<Money,Integer>();
 		adventage.put(money, 1);
@@ -74,45 +59,17 @@ public class Player {
 		return pts;
 	}
 	
-	/*
-	public Map<Money, Integer> getMoney() {
-		return money;
-	}
-	*/
 	
 	/// Permet d'ajouter des jetons au joueur
 	public void addMoney(Map<Money,Integer> newMoney) {
 		Objects.requireNonNull(newMoney);	
 		bank.add(newMoney);
-		/*
-		for(Map.Entry<Money,Integer> i:newMoney.entrySet()) {
-			var key = i.getKey();
-			var value = i.getValue();
-			
-			if(value < 1) {
-				throw new IllegalArgumentException("La valeur doit être positive money:"+i);
-			}
-			map.merge(key,value,Integer::sum);
-		}	
-		*/	
 	}
 	
 	
 	private Map<Money,Integer> subMoney(Map<Money,Integer> price) {
 		Objects.requireNonNull(price);
 		return null;
-		/*
-		var remis=new HashMap<Money, Integer>();
-		for(Map.Entry<Money, Integer> i:price.entrySet()) {
-			var key = i.getKey();
-			var adv = adventage.getOrDefault(key, 0); // aventage
-			var value = i.getValue() - adv;
-			if(value<0) value = 0; // pas de prix négatif
-			remis.put(key, value);
-			money.merge(key,(0-value),Integer::sum);
-		}
-		return remis;
-		*/
 	}
 	
 	public boolean buy(Card card) {
@@ -156,14 +113,6 @@ public class Player {
 		Objects.requireNonNull(card);
 		
 		return(advantages.canBuy(card.getPrice(), advantages));
-		/*
-		for(var sou: a2.getPrice().get().keySet()) {
-			if(a2.getPrice().get().get(sou)>advantages.getOrDefault(,0)) {
-				return false;
-			}
-		}
-		return true;
-		*/
 	}
 	
 	public void deleteReservedCard(Card card) {

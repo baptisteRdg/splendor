@@ -15,7 +15,9 @@ public class Game {
 	private final Board board;
 	private final boolean limited;// 0 pour la V1 et 1 pour la V2
 	
-	
+	public boolean limited() {
+		return limited;
+	}
 	
 	public Game(){		
 		var nbPlayer = 0;var limitedChoice = -1;
@@ -89,19 +91,6 @@ public class Game {
 		}
 		Ter.ln(msg);
 	}
-	/*
-	private void printChoiceMoney(Map<Money,Integer> map) {
-		Objects.requireNonNull(map);
-		var tokens = new ArrayList<Money>(map.keySet());
-		
-		var msg = new StringBuilder().append("Liste des jetons :\n");
-		for(int i=0;i<tokens.size();i++) {
-			msg.append("[").append(i).append("]   ").append(tokens.get(i)).append(" : ").append(map.get(tokens.get(i))).append("\n");
-		}
-		
-		Ter.ln(msg);
-	}
-	*/
 	
 	private boolean moneyEvent(Player player) {
 		if(player.getBank().sommeAccount() >= 10) {Ter.ln("\n Vous avez déjà au moins 10 jetons"); return false;} // pas plus de 10 jetons
@@ -133,7 +122,6 @@ public class Game {
 		if(chosenTokens.isEmpty())return false;
 		
 		player.addMoney(chosenTokens); // ajoute les jetons dans le compte du joueur
-		//board.subMoney(mapMoney);
 		board.getJetons().sub(chosenTokens); // retire les jetons de la pioche
 		Ter.ln(new StringBuilder().append("\n[Event] Vous avez pris les jetons : ").append(chosenTokens));
 		return true;

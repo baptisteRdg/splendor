@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -18,7 +17,6 @@ public class Board {
 	private final ArrayList<ArrayList<Card>> pioches;
 	private final ArrayList<ArrayList<Card>> grille;
 	private final List<Player> joueurs;
-	//private final HashMap<Money, Integer> jetons;
 	private final Bank jetons = new Bank();
 	
 	public Card nextCard(int level) {
@@ -111,15 +109,6 @@ public class Board {
 		list.remove(3);
 		return list;
 	}
-	
-	
-	
-	/*
-	public void subMoney(Map<Money, Integer> map) {
-	    Objects.requireNonNull(map);
-	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
-	}
-	*/
 	
 	public List<Card> masterPossibility(Player p){
 		var tmp=new ArrayList<Card>();
@@ -218,20 +207,4 @@ public class Board {
 		grille.get(3).remove(card);
 		grille.get(3).add(nextCard(card.level()));
 	}
-	
-	/*
-	public void addMoney(Map<Money,Integer> newMoney) {
-		Objects.requireNonNull(newMoney);
-		
-		for(Map.Entry<Money,Integer> i:newMoney.entrySet()) {
-			var key = i.getKey();
-			var value = i.getValue();
-			
-			if(value < 0) {
-				throw new IllegalArgumentException("La valeur doit être positive money:"+i);
-			}
-			jetons.merge(key,value,Integer::sum);
-		}		
-	}
-	*/
 }
