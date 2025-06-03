@@ -121,7 +121,8 @@ public class Bank {
 		Objects.requireNonNull(player);
 		
 		var advantages = player.getAdvantages();
-		var price = cost.reduction(advantages); // 
+		var price = cost.reduction(advantages);
+		var realPrice = new HashMap<Money,Integer>();// ce qu'il va falloir retirer au joueur à la fin
 		var missing = 0;
 		
 		if(!canBuyWithGold(price,player.getAdvantages()))return false; // pas d'achat possible 
@@ -132,16 +133,16 @@ public class Bank {
 	        var costValue = entry.getValue();
 	        var accountValue = account.getOrDefault(money, 0);
 
-	        if (accountValue < costValue) missing += costValue - accountValue;
+	        if (accountValue < costValue) {
+	        	missing += costValue - accountValue;
+	        	realPrice.put(money, accountValue);
+	        }else {
+	        	realPrice.put(money, costValue);
+	        }
 	    }
-	    
-	    // achat 
-	    sub(price);
-	    
-	    // retire le gold au joueur :
-	    var goldPrice = new HashMap<Money,Integer>();
-	    goldPrice.put(Money.GOLD, missing);
-	    sub(goldPrice);
+	    realPrice.put(Money.GOLD, missing);
+	    // retire les monnaies consommés au joueur 
+	    sub(new Price(realPrice));
 	    
 		return true;
 	}

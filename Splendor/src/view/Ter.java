@@ -8,57 +8,63 @@ public final class Ter {
 
   
 
-    // 1. Rien : juste retour à la ligne
+    // Retour à la ligne
     public static void ln() {
         System.out.println();
     }
 
-    // 2. Affiche un message (String)
+    // Affiche un String
     public static void ln(String message) {
         System.out.println(message);
     }
 
-    // 3. Affiche un message (StringBuilder)
+    // Affiche un StringBuilder
     public static void ln(StringBuilder sb) {
         System.out.println(sb.toString());
     }
-
-    // 4. Méthode générique avec options
-    public static Object ln(Object message, Integer expectType, Boolean withNewLine) {
-        if (message instanceof StringBuilder) {
-            System.out.print(((StringBuilder) message).toString());
-        } else if (message instanceof String) {
-            System.out.print((String) message);
-        }
-
-        if (Boolean.TRUE.equals(withNewLine)) {
-            System.out.println();
-        }
-
-        if (expectType == null) return null;
-
-        if (expectType == 1) {
-            while (!scanner.hasNextInt()) {
-                System.out.print("[Erreur] Entrez un entier valide : ");
-                scanner.next(); // Ignore entrée invalide
-            }
-            int value = scanner.nextInt();
-            scanner.nextLine(); // 🧹 Consomme le \n restant après nextInt()
-            return value;
-        } else if (expectType == 2) {
-            String input = scanner.nextLine().trim();
-            while (input.isEmpty()) {
-                System.out.print("[Erreur] Entrez un texte non vide : ");
-                input = scanner.nextLine().trim();
-            }
-            return input;
-        }
-
-        return null;
+    
+    // Affiche un StringBuilder ou un String + option pour faire un retour à la ligne ou pas
+    public static void ln(Object message,boolean withNewLine) {
+    	Objects.requireNonNull(message);
+    	if (message instanceof StringBuilder) System.out.print(((StringBuilder) message).toString());
+        else if (message instanceof String) System.out.print((String) message);
+        if(withNewLine)System.out.println();
     }
 
-
-    // 5. Supprime tout
+    /// Permet de faire un scanner pour avoir un int en retour
+    /// @Param message, affiche un string avant de faire le scanner
+    /// pas de retour à la ligne
+    /// @return int saisie dans system.out
+    public static int sc(String message) {
+    	Objects.requireNonNull(message);
+    	System.out.print(message);
+    	
+        while (!scanner.hasNextInt()) {
+            System.out.print("[Erreur] Entrez un entier valide : ");
+            scanner.next(); // Ignore entrée invalide
+        }
+        int value = scanner.nextInt();
+        scanner.nextLine();
+        return value;
+    }
+    
+  /// Permet de faire un scanner pour avoir un int en retour
+    /// @Param message, affiche un string avant de faire le scanner
+    /// pas de retour à la ligne
+    /// @return string saisie dans system.out
+    public static String scS(String message) {
+    	Objects.requireNonNull(message);
+    	System.out.print(message);
+    	
+    	String input = scanner.nextLine().trim();
+        while (input.isEmpty()) {
+            System.out.print("[Erreur] Entrez un texte non vide : ");
+            input = scanner.nextLine().trim();
+        }
+        return input;
+    }
+    
+    // Supprime tout
     public static void clear() {
     	System.out.flush();
     }

@@ -122,7 +122,7 @@ public class Player {
 		
 		if(!bank.canBuy(price,advantages)) {
 			if(bank.canBuyWithGold(price,advantages)) {// si possible uniquement avec de l'or
-				var choix = (int)Ter.ln("[Action] Vous ne pouvez pas acheter la carte, mais avec du gold c'est possible.\nVoulez-vous les utiliser ? (1 oui, autre non)",1,true);
+				var choix = Ter.sc("[Action] Vous ne pouvez pas acheter la carte, mais avec du gold c'est possible.\nVoulez-vous les utiliser ? (1 oui, autre non)");
 				if(choix == 1) bank.buyWithGold(price, this);
 				else return false;
 			}else  return false;

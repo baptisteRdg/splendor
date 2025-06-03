@@ -13,16 +13,19 @@ import view.Ter;
 public class Game {
 
 	private final Board board;
+	private final boolean limited;// 0 pour la V1 et 1 pour la V2
 	
 	
 	
-	public Game(){
-		var msgNbPlayer = new StringBuilder().append("[Choix] Saisir le nombre de joueur (minimum 2 et maximum 4) : ");
-		
-		int nbPlayer = 0;
+	public Game(){		
+		var nbPlayer = 0;var limitedChoice = -1;
 		while(nbPlayer < 2 || nbPlayer > 4) {
-			nbPlayer = (int) Ter.ln(msgNbPlayer,1,false);
+			nbPlayer = Ter.sc("[Choix] Saisir le nombre de joueur (minimum 2 et maximum 4) : ");
 		}
+		while(limitedChoice != 0 && limitedChoice != 1) {
+			limitedChoice = Ter.sc("[Choix Saisir la version du jeu (0 pour la V1 et 1 pour la V2) : ");
+		}
+		limited = (limitedChoice == 0) ? false : true;
 
 		var listCard = initCard(nbPlayer);
 		var listPlayer = initPlayer(nbPlayer);
@@ -48,7 +51,7 @@ public class Game {
 
 	    for(int i = 0; i < nbPlayer; i++) {
 	        var str = new StringBuilder().append(msg).append(i+1).append("/").append(nbPlayer).append(" :");
-	        var name = (String) Ter.ln(str, 2, false);
+	        var name = Ter.scS(str.toString());
 	        if (name.isEmpty()) throw new IllegalArgumentException("[Erreur] initPlayer - Le nom du joueur ne peut pas être vide");
 	        list.add(new Player(name));
 	    }
@@ -65,7 +68,7 @@ public class Game {
 		}
 		int choice=-1;
 		while(choice<0 || choice >=lst.size()){
-			choice=(int)Ter.ln(msg,1,false);
+			choice=Ter.sc(msg.toString());
 		}
 		return lst.get(choice);
 	}
@@ -113,7 +116,7 @@ public class Game {
 		var choix = Integer.MIN_VALUE;
 		var chosenTokens = new HashMap<Money,Integer>();
 		while(choix < -1 || choix > 1) {
-			choix = (int) Ter.ln("[Choix] Retour (-1) Choisir Trois jetons différents (0) ou deux fois le même ?(1) :",1,false);
+			choix = Ter.sc("[Choix] Retour (-1) Choisir Trois jetons différents (0) ou deux fois le même ?(1) :");
 			if(choix==-1) return false;
 			if(choix==0) {
 				var tmp = choseDifferentMoney(tokensList);
@@ -142,7 +145,7 @@ public class Game {
 		var map = new HashMap<Money,Integer>();
 		
 		while(true) {
-			var choix = (int) Ter.ln("Retour(-1), N° du jetons à prendre : ", 1, true);
+			var choix = Ter.sc("Retour(-1), N° du jetons à prendre : ");
 			if(choix < -1 || choix >= listeJetons.size())continue; // vérification si c'est une possibilité
 			if(choix == -1)return null;
 
@@ -163,7 +166,7 @@ public class Game {
 		while(true) {
 			if(map.size() == 3)return map;
 			
-			var choix = (int) Ter.ln("[Choix] Retour (-1) Choisir les trois jetons à prendre :",1,false);
+			var choix = Ter.sc("[Choix] Retour (-1) Choisir les trois jetons à prendre :");
 			if(choix < -1 || choix >= listeJetons.size()) continue;
 			if(choix == -1)return null;
 
@@ -187,8 +190,8 @@ public class Game {
 		board.printGrilleBuy();
 		
 		var listCard = board.getGrilleUpdate();
-		var i = (int) Ter.ln("Ligne :",1,false);
-		var j = (int) Ter.ln("Numéro carte:",1,false);
+		var i = Ter.sc("Ligne :");
+		var j = Ter.sc("Numéro carte:");
 		
 		if(i < 0 || i > listCard.size()-1)return false;
 		if( j < 0 || j > listCard.get(i).size()-1)return false;
@@ -207,20 +210,22 @@ public class Game {
 	}
 	
 	private boolean reserveCardEvent(Player player) {
+		Ter.space();
+		board.printGrilleForReservation();
 		if(player.getReserved().size() > 2) { // si déjà trois cartes réservées
 			Ter.ln("\n[Action refusé] Vous ne pouvez plus rajouter de réservation\n");
 			return false;
 		}
 		var choix = -2;
 		while(choix < -1 || choix > 1) {
-			choix = (int) Ter.ln("Réservé une carte mystère ou une du plateau ? Retour(-1)  Plateau(0)  Mystère(1) :", 1, false);
+			choix = (int) Ter.sc("Réservé une carte mystère ou une du plateau ? Retour(-1)  Plateau(0)  Mystère(1) :");
 			if(choix==-1)return false;
 			if(choix==0) {
 				var i = -1;
 				var j = -1;
 				while((i < 0 || i > 2) || j < 0 || j > 4) {
-					 i = (int) Ter.ln("Ligne :",1,false);
-					 j = (int) Ter.ln("Numéro carte:",1,false);
+					 i = Ter.sc("Ligne :");
+					 j = Ter.sc("Numéro carte:");
 				}
 				var card = board.getGrille().get(i).get(j);
 				
@@ -242,7 +247,7 @@ public class Game {
 			if(choix==1) {
 				var i = 0;
 				while(i<1 || i>3) {
-					i = (int) Ter.ln("Niveau de la carte :",1,false);
+					i = (int) Ter.sc("Niveau de la carte :");
 				}
 				var card = board.nextCard(i);
 				player.addReservedCard(card);
@@ -271,7 +276,7 @@ public class Game {
 		
 		var choix = -2;
 		while(choix<-1 || choix > list.size()-1) {
-			choix = (int) Ter.ln("[Choix] Retour(-1) | Choisir le numéro de la carte à acheter :",1,false);
+			choix = Ter.sc("[Choix] Retour(-1) | Choisir le numéro de la carte à acheter :");
 		}
 		if(choix == -1) return false;
 		var card = list.get(choix);
@@ -294,20 +299,12 @@ public class Game {
 				
 				var choix = 0;
 				while(choix < 1 || choix > 4) {
-					choix = (int)Ter.ln("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ",1,false);
-					if(choix == 1) { // prendre des jetons
-						if(!moneyEvent(i)) choix = 0;
-					}
-					if(choix == 2) {
-						if(!buyCardEvent(i))choix = 0;
-					}
-					if(choix == 3) {
-						Ter.space();
-						board.printGrilleForReservation();
-						if(!reserveCardEvent(i)) choix = 0;
-					}
-					if(choix == 4) {
-						if(!buyReservedCardEvent(i))choix = 0;
+					choix = Ter.sc("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ");
+					switch(choix) {
+					case 1 -> {if(!moneyEvent(i)) 			choix = 0;	break;}
+					case 2 -> {if(!buyCardEvent(i))			choix = 0; 	break;}
+					case 3 -> {if(!reserveCardEvent(i)) 	choix = 0;	break;}
+					case 4 -> {if(!buyReservedCardEvent(i))	choix = 0; 	break;}
 					}
 					
 				}

@@ -210,7 +210,7 @@ public class Board {
 	
 	public void removeCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
-		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
+		grille.get(lig).set(col, nextCard(grille.get(lig).get(col).level()));
 	}
 	
 	public void removeMaster(Card card) {
