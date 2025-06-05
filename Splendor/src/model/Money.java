@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 
 public enum Money {
 	
@@ -29,6 +30,17 @@ public enum Money {
 			throw new IllegalArgumentException("Unexpected value: " + this);
 		}
 	}
+	public Color toColor() {
+		switch (this) {
+		case EMERALD: return Color.green;
+        case SAPPHIRE: return Color.magenta;
+        case DIAMOND: return Color.blue;
+        case RUBY: return Color.red;
+        case ONYX: return Color.gray;
+        case GOLD: return Color.yellow;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + this);
+	}}
 	
 	@Override
 	public String toString() {
