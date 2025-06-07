@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,6 +20,37 @@ public class Graphic {
 	//private final HashMap<String, Image> picture;
 	private final ApplicationContext context;
 	private final Font font;
+	private final double player_point_start_x;
+	private final double player_point_start_y;
+	private final double player_point_width;
+	private final double player_point_height;
+	private final double player_point_text_x;
+	private final double player_point_text_y;
+	private final double player_name_start_x;
+	private final double player_name_start_y;
+	private final double player_name_width;
+	private final double player_name_height;
+	private final double player_name_text_x;
+	private final double player_name_text_y;
+	private final double player_money_x;
+	private final double player_money_y;
+	private final double player_money_width;
+	private final double player_money_heigh;
+	private final double player_advantage_x;
+	private final double player_advantage_y;
+	private final double player_advantage_width;
+	private final double player_advantage_heigh;
+	private final double bank_heigh;
+	private final double bank_width;
+	private final double bank_x;
+	private final double bank_y1;
+	private final double board_x;
+	private final double board_y;
+	private final double board_width;
+	private final double board_heigh;
+	private final double width_card;
+	private final double height_card;
+	private final List<Money> list_money;
 	
 	@SuppressWarnings("unused")
 	public Graphic(ApplicationContext context) {
@@ -29,7 +62,37 @@ public class Graphic {
 		this.height=screenInfo.height();
 		this.context=context;
 		this.font=new Font("Arial", Font.BOLD, 12);
-	
+		player_point_start_x=width*0.87;
+		player_point_start_y=height*0.03;
+		player_point_width=width*0.10;
+		player_point_height=height*0.05;
+		player_point_text_x=width*0.89;
+		player_point_text_y=height*0.065;
+		player_name_start_x=width*0.03;
+		player_name_start_y=height*0.03;
+		player_name_width=width*0.1;
+		player_name_height=height*0.05;
+		player_name_text_x=width*0.05;
+		player_name_text_y=height*0.065;
+		player_money_heigh=height*0.20;
+		player_money_width=width*0.20;
+		player_money_x=width*0.25;
+		player_money_y=height*0.75;
+		player_advantage_heigh=height*0.20;
+		player_advantage_width=width*0.20;
+		player_advantage_x=width*0.45;
+		player_advantage_y=height*0.75;
+		bank_heigh=height*0.60;
+		bank_width=width*0.10;
+		bank_x=width*0.1;
+		bank_y1=height*0.2;
+		board_x=width*0.20;
+		board_y=height*0.20;
+		board_heigh=height*0.70;
+		board_width=width*0.70;
+		width_card=(board_width-board_x)/4;
+		height_card=(board_heigh-board_y)/4;
+		list_money= List.of(Money.DIAMOND,Money.EMERALD,Money.ONYX,Money.RUBY,Money.SAPPHIRE,Money.GOLD);
 		//manque les images
 		
 	}
@@ -57,15 +120,15 @@ public class Graphic {
 	}
 	public void drawPoint(Player P) {
 		var pts= P.getPts();
-		drawFilledRectangle(width*0.87, height*0.03,width*0.10,height*0.05, Color.DARK_GRAY);
-		drawText(width*0.89,height*0.065,new String("Point: "+pts),font,Color.BLACK);		
+		drawFilledRectangle(player_point_start_x, player_point_start_y,player_point_width,player_point_height, Color.DARK_GRAY);
+		drawText(player_point_text_x,player_point_text_y,new String("Point: "+pts),font,Color.BLACK);		
 	}
 	
 	
 	public void drawName(Player P) {
 		var name= P.getName();
-		drawFilledRectangle(width*0.03, height*0.03, width*0.1, height*0.05, Color.DARK_GRAY);
-		drawText(width*0.05, height*0.065, new String("Player "+name), font, Color.black);
+		drawFilledRectangle(player_name_start_x,player_name_start_y ,player_name_width ,player_name_height , Color.DARK_GRAY);
+		drawText(player_name_text_x, player_name_text_y, new String("Player "+name), font, Color.black);
 	}
 	
 	public void drawMoney(Map<Money,Integer > money,double x,double y,double size_x,double size_y,Color color_rect,Color color_font,String header) {
@@ -78,7 +141,7 @@ public class Graphic {
 		int little_height=(int)(size_y-size_y*0.2)/size;
 		y+=size_y*0.20;
 		
-		for(var k:money.keySet()) {
+		for(var k:list_money) {
 			drawCircle(x+size_x*0.075,y, size_x*0.05, k.toColor());
 			drawText(x+size_x*0.15,y , new String(" : "+money.get(k)), font, color_font);//voir comment afficher les gens
 			y+=little_height;
@@ -106,20 +169,20 @@ public class Graphic {
 	public void drawPlayer(Player P){
 		drawPoint(P);
 		drawName(P);
-		drawMoney(P.getMoney(), width*0.25, height*0.75, width*0.20, height*0.20, Color.DARK_GRAY, Color.black, new String("Porte-monnaie"));
-		drawMoney(P.getAdventage(), width*0.45, height*0.75, width*0.20, height*0.20, Color.DARK_GRAY, Color.black, new String("Advantage"));
+		drawMoney(P.getMoney(),player_money_x, player_money_y, player_money_width, player_money_heigh, Color.DARK_GRAY, Color.black, new String("Porte-monnaie"));
+		drawMoney(P.getAdventage(), player_advantage_x, player_advantage_y, player_advantage_width, player_advantage_heigh, Color.DARK_GRAY, Color.black, new String("Advantage"));
 		
 	}
 	
 	public void drawBank(Board b) {
-		drawMoney(b.getJetons(), width*0.03, height*0.20, width*0.1, height*0.60,Color.DARK_GRAY, Color.black, new String("Banque"));
+		drawMoney(b.getJetons(), bank_x, bank_y1, bank_width, bank_heigh,Color.DARK_GRAY, Color.black, new String("Banque"));
 	}
 	
 	public void drawCards(Board b) {
-		var x_first=width*0.20;
-		var y_first=height*0.20;
-		var heigh_card=(height*0.70-y_first)/4;
-		var width_card=(width*0.70-x_first)/4;
+		var x_first=board_x;
+		var y_first=board_y;
+		var heigh_card=height_card;
+		var width_card=this.width_card;
 		var x=x_first;
 		var y=y_first;
 		for(var cards:b.getGrille()) {
@@ -159,5 +222,27 @@ public class Graphic {
 		drawText( 0.45*width, height*0.5, new String("winner is"+winner.getName()),font , Color.BLACK);
 		drawText(0.75*width, height*0.5, new String("QUIT"),font , Color.BLACK);
 		
+	}
+	
+	public CoordClic clicToCoordCard(CoordClic clic){
+		if((clic.x()>= board_x && clic.x()<= board_x+board_width)||((clic.y()>= board_y && clic.y()<= board_y+board_heigh))) {
+			return new CoordClic((int)((clic.x()-board_x)/width_card), (int)((clic.y()-board_y)/height_card));
+		}
+		return null;
+	}
+	
+	public Money clicToMoneyBank(CoordClic clic, Board b) {
+		int size=b.getJetons().size();
+		double y= bank_y1+ bank_heigh*0.20;
+		int little_height=(int)(bank_heigh*0.8)/size;
+		if(!((clic.x()>= bank_x && clic.x()<= bank_x+bank_width)||((clic.y()>= y && clic.y()<= bank_y1+bank_heigh)))) {
+			return null;
+		}
+		int cas=(int) ((clic.y()-y)/little_height);
+		System.out.println(cas);
+		if(cas==5) {
+			return null;
+		}
+		return list_money.get(cas);
 	}
 }
