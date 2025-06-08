@@ -96,7 +96,7 @@ public class Game {
 		if(player.getBank().sommeAccount() >= 10) {Ter.ln("\n Vous avez déjà au moins 10 jetons"); return false;} // pas plus de 10 jetons
 		
 		//var listeJetons = new ArrayList<Money>(board.getJetons().keySet());
-		var tokensMap = board.getJetons().getAccountWithoutGold();
+		var tokensMap = board.getJetons().accountWithoutGold();
 		var tokensList = new ArrayList<Money>(tokensMap.keySet());
 		
 		Ter.space();

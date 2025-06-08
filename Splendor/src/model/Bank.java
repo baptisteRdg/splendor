@@ -3,25 +3,26 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Bank {
 	/// YEAH A BANK MAN !! ALL IN RED ITS LAS VEGAS HERE BABY
-	private final HashMap<Money,Integer> account;
+	private final HashMap<Money,Integer> account = new HashMap<>();
 	
-	public Bank() {
-		account = new HashMap<Money,Integer>();
-	}
+	public Bank() {}
+	
 	public Bank(Map<Money,Integer> map) {
 		Objects.requireNonNull(map);
-		account = new HashMap<Money,Integer>(map);
+		map.putAll(map);
 	}	
 	
 	
-	public HashMap<Money,Integer> getAccount(){
+	public HashMap<Money,Integer> account(){
 		return account;
 	}
 	
-	public HashMap<Money,Integer> getAccountWithoutGold(){
+	public Map<Money,Integer> accountWithoutGold(){
+		/*
 		var liste = new HashMap<Money,Integer>();
 		
 		account.forEach((money,value)->{
@@ -29,6 +30,11 @@ public class Bank {
 		});
 		
 		return liste;
+		*/
+		
+		return account.entrySet().stream()
+				.filter(t -> !t.getKey().equals(Money.GOLD))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(_, b) -> b,HashMap::new));
 	}
 	
 	/// permet de retourner de combien d'une monnaie un compte possède
@@ -53,7 +59,7 @@ public class Bank {
 	    map.forEach((money, value) -> account.merge(money, -value, Integer::sum));
 	}
 	
-	
+	/*
 	/// Permet de savoir si un achat peut être fait sans gold
 	public boolean canBuy(Price cost, Bank advantages) {
 		Objects.requireNonNull(cost);
@@ -72,6 +78,19 @@ public class Bank {
 		}
 		return true;
 	}
+	*/
+	
+	public boolean canBuy(Price cost, Bank advantages) {
+	    Objects.requireNonNull(cost);
+	    Objects.requireNonNull(advantages);
+
+	    var price = cost.reduction(advantages);
+	    var map = price.get();
+
+	    return map.entrySet().stream()
+	        .allMatch(entry -> account.getOrDefault(entry.getKey(), 0) >= entry.getValue());
+	}
+
 	
 	/// permet de savoir si un achat peut être fait avec du gold
 	public boolean canBuyWithGold(Price cost,Bank advantages) {
