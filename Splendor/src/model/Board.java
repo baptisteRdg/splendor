@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -18,7 +17,7 @@ public class Board {
 	private final ArrayList<ArrayList<Card>> pioches;
 	private final ArrayList<ArrayList<Card>> grille;
 	private final List<Player> joueurs;
-	private final HashMap<Money, Integer> jetons;
+	private final Bank jetons = new Bank();
 	
 	public Card nextCard(int level) {
 		if(pioches.get(level-1).isEmpty()) return null;
@@ -40,7 +39,7 @@ public class Board {
 		}
 		return retour;
 	}
-	private HashMap<Money, Integer> firstMoney(){
+	private void firstMoney(){
 		var tmp=new HashMap<Money, Integer>();
 		int retired=0;
 		if(number_of_joueur==2) {
@@ -55,7 +54,8 @@ public class Board {
 		tmp.put(Money.ONYX,7-retired);
 		tmp.put(Money.RUBY,7-retired);
 		tmp.put(Money.SAPPHIRE,7-retired);
-		return tmp;
+		
+		jetons.add(tmp);
 	}
 	
 	public Board(int number_player,List<Player> joueur,List<Card> cards){
@@ -64,7 +64,7 @@ public class Board {
 		
 		pioches = new ArrayList<ArrayList<Card>>();
 		grille = new ArrayList<ArrayList<Card>>();
-		jetons = firstMoney();
+		firstMoney();
 		
 		if(number_player<2 || number_player>4) throw new IllegalArgumentException("nombre de joueur invalid");
 
@@ -92,7 +92,7 @@ public class Board {
 	}
 	
 	
-	public HashMap<Money, Integer> getJetons() {
+	public Bank getJetons() {
 		return jetons;
 	}
 	
@@ -103,9 +103,11 @@ public class Board {
 	public ArrayList<ArrayList<Card>> getGrille(){
 		return grille;
 	}
-	public void subMoney(Map<Money, Integer> map) {
-	    Objects.requireNonNull(map);
-	    map.forEach((money, value) -> jetons.merge(money, -value, Integer::sum));
+	
+	public ArrayList<ArrayList<Card>> getGrilleUpdate(){
+		var list = new ArrayList<ArrayList<Card>>(grille);
+		list.remove(3);
+		return list;
 	}
 	
 	public List<Card> masterPossibility(Player p){
@@ -119,11 +121,24 @@ public class Board {
 	}
 	
 	public void printGrille() {
-		var msg = new StringBuilder().append("Voici le plateau de jeu, sélectionner les coordonnées de la carte à acheter\n");
+		var msg = new StringBuilder().append("Voici le plateau de jeu\n");
 		for(int i=0;i< grille.size();i++) {
 			msg.append("Ligne ").append(i).append(" | ");
 			for(int j=0;j< grille.get(i).size();j++) {
 				msg.append(" ").append(j).append(" (").append(grille.get(i).get(j)).append(")");
+			}
+			msg.append("\n");
+		}
+		Ter.ln(msg);
+	}
+	
+	public void printGrilleBuy() {
+		var msg = new StringBuilder().append("Sélectionner les coordonnées de la carte à acheter\n");
+		var list = getGrilleUpdate();
+		for(int i=0;i< list.size();i++) {
+			msg.append("Ligne ").append(i).append(" | ");
+			for(int j=0;j< grille.get(i).size();j++) {
+				msg.append(" ").append(j).append(" (").append(list.get(i).get(j)).append(")");
 			}
 			msg.append("\n");
 		}
@@ -184,26 +199,12 @@ public class Board {
 	
 	public void removeCard(int lig,int col) {
 		if(lig >=5 || lig<0 || col>=5 || col <0)throw new IllegalArgumentException("[Error] removeCard les coordonnés ne sont pas valide");
-		grille.get(lig).add(col, nextCard(grille.get(lig).get(col).level()));
+		grille.get(lig).set(col, nextCard(grille.get(lig).get(col).level()));
 	}
 	
 	public void removeMaster(Card card) {
 		Objects.requireNonNull(card);
 		grille.get(3).remove(card);
 		grille.get(3).add(nextCard(card.level()));
-	}
-	
-	public void addMoney(Map<Money,Integer> newMoney) {
-		Objects.requireNonNull(newMoney);
-		
-		for(Map.Entry<Money,Integer> i:newMoney.entrySet()) {
-			var key = i.getKey();
-			var value = i.getValue();
-			
-			if(value < 0) {
-				throw new IllegalArgumentException("La valeur doit être positive money:"+i);
-			}
-			jetons.merge(key,value,Integer::sum);
-		}		
 	}
 }

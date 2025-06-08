@@ -1,6 +1,5 @@
 package model;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public non-sealed class Upgrade implements Card{
@@ -8,11 +7,11 @@ public non-sealed class Upgrade implements Card{
 	private final String id;
 	private final Money advantage;
 	private final int level;
-	private final HashMap<Money,Integer> cost;
+	private final Price price;
 	
 	
 
-	Upgrade(int level,String id,Money money,HashMap<Money,Integer> cost,int pts){
+	Upgrade(int level,String id,Money money,int pts,Price price){
 		Objects.requireNonNull(id);
 		if (level>3 || level<1) {
 			throw new IllegalArgumentException("value on level is out on scope");
@@ -21,7 +20,7 @@ public non-sealed class Upgrade implements Card{
 		this.pts=pts;
 		this.id=id;
 		this.advantage= money;
-		this.cost= cost;
+		this.price= price;
 	}
 	
 	public int point() {
@@ -34,8 +33,8 @@ public non-sealed class Upgrade implements Card{
 	public int level() {
 		return level;
 	}
-	public HashMap<Money,Integer> cost(){
-		return cost;
+	public Price getPrice(){
+		return price;
 	}
 	
 	public String id() {
@@ -43,18 +42,18 @@ public non-sealed class Upgrade implements Card{
 	}
 	
 	
-	private String costString() {
+	private String priceString() {
 		var ret=new StringBuilder().append("(");
-		for(var a:cost.keySet()) {
-			if(cost.get(a)>0) {
-			ret=ret.append("").append(a.shortString()).append(":").append(cost.get(a));
+		for(var a:price.get().keySet()) {
+			if(price.get().get(a)>0) {
+			ret=ret.append("").append(a.shortString()).append(":").append(price.get().get(a));
 		}
 	}
 		return ret.append(")").toString();
 }
 	@Override
 	public String toString() {
-		var c=new StringBuilder().append("P: "+pts+" A:"+advantage.shortString()+" cost:"+costString());
+		var c=new StringBuilder().append("P: "+pts+" A:"+advantage.shortString()+" cost:"+priceString());
 		for(var i=c.length();i<34;i++) {
 			//System.out.println(c.length());
 			c=c.append(" ");

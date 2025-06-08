@@ -1,21 +1,22 @@
 package model;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public non-sealed class Master implements Card {
 	private final int pts;
-	private final HashMap<Money,Integer> cost;
 	private final String id;
+	private final Price price;
 	
-	Master(int pts,String id,HashMap<Money,Integer> cost){
+	Master(int pts,String id,Price price){
 		Objects.requireNonNull(id);
+		Objects.requireNonNull(price);
+		
 		if(pts<0) {
 			throw new IllegalArgumentException("number of points is negatif");
 		}
 		this.pts=pts;
 		this.id=id;
-		this.cost=cost;
+		this.price=price;
 	}
 	
 	public int point() {
@@ -26,8 +27,8 @@ public non-sealed class Master implements Card {
 		return null;
 	}
 	
-	public HashMap<Money,Integer> cost(){
-		return cost;
+	public Price getPrice(){
+		return price;
 	}
 	
 	public String id() {
@@ -39,9 +40,9 @@ public non-sealed class Master implements Card {
 	}
 	private String costString() {
 		var ret=new StringBuilder().append("(");
-		for(var a:cost.keySet()) {
-			if(cost.get(a)>0) {
-			ret=ret.append("").append(a.shortString()).append(":").append(cost.get(a));
+		for(var a:price.get().keySet()) {
+			if(price.get().get(a)>0) {
+			ret=ret.append("").append(a.shortString()).append(":").append(price.get().get(a));
 		}
 	}
 		return ret.append(")").toString();
