@@ -11,6 +11,7 @@ public non-sealed class Upgrade implements Card{
 	
 	
 
+
 	Upgrade(int level,String id,Money money,int pts,Price price){
 		Objects.requireNonNull(id);
 		if (level>3 || level<1) {
