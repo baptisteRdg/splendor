@@ -1,6 +1,17 @@
 package main;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.util.List;
+
+import com.github.forax.zen.Application;
+
 import controller.Game;
+import controller.graphicAction;
+import model.Board;
+import model.CardCsv;
+import model.Player;
+import view.Graphic;
 
 
 public class Main {
@@ -8,8 +19,8 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		var game = new Game();
-		game.runner();
-		/*Application.run(Color.WHITE, context ->{
+		//game.runner();
+		Application.run(Color.WHITE, context ->{
 			var clic=new graphicAction(context);
 			var P1=new Player("lala");
 			var P2=new Player("lulu");
@@ -26,7 +37,7 @@ public class Main {
 				e.printStackTrace();
 			}
 			
-		});*/
+		});
 	}
 
 }

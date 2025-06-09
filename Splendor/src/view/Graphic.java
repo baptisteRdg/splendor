@@ -163,19 +163,19 @@ public class Graphic {
 			drawText(x+size_x*0.05,y+size_y*0.45,new String("Adventage:"), font, Color.black);
 			drawCircle(x+size_x*0.85,y+size_y*0.4, size_y*0.1, C.advantage().toColor());
 		}	
-		drawMoney(C.cost(), x+size_x*0.05, y+size_y*0.5, size_x*0.95, size_y*0.5, background, Color.black, new String("Cost"));
+		drawMoney(C.getPrice().get(), x+size_x*0.05, y+size_y*0.5, size_x*0.95, size_y*0.5, background, Color.black, new String("Cost"));
 		}
 	
 	public void drawPlayer(Player P){
 		drawPoint(P);
 		drawName(P);
-		drawMoney(P.getMoney(),player_money_x, player_money_y, player_money_width, player_money_heigh, Color.DARK_GRAY, Color.black, new String("Porte-monnaie"));
-		drawMoney(P.getAdventage(), player_advantage_x, player_advantage_y, player_advantage_width, player_advantage_heigh, Color.DARK_GRAY, Color.black, new String("Advantage"));
+		drawMoney(P.getBank().account(),player_money_x, player_money_y, player_money_width, player_money_heigh, Color.DARK_GRAY, Color.black, new String("Porte-monnaie"));
+		drawMoney(P.getAdvantages().account(), player_advantage_x, player_advantage_y, player_advantage_width, player_advantage_heigh, Color.DARK_GRAY, Color.black, new String("Advantage"));
 		
 	}
 	
 	public void drawBank(Board b) {
-		drawMoney(b.getJetons(), bank_x, bank_y1, bank_width, bank_heigh,Color.DARK_GRAY, Color.black, new String("Banque"));
+		drawMoney(b.getJetons().account(), bank_x, bank_y1, bank_width, bank_heigh,Color.DARK_GRAY, Color.black, new String("Banque"));
 	}
 	
 	public void drawCards(Board b) {
@@ -232,7 +232,7 @@ public class Graphic {
 	}
 	
 	public Money clicToMoneyBank(CoordClic clic, Board b) {
-		int size=b.getJetons().size();
+		int size=b.getJetons().account().size();
 		double y= bank_y1+ bank_heigh*0.20;
 		int little_height=(int)(bank_heigh*0.8)/size;
 		if(!((clic.x()>= bank_x && clic.x()<= bank_x+bank_width)||((clic.y()>= y && clic.y()<= bank_y1+bank_heigh)))) {

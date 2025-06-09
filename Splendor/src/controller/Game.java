@@ -279,7 +279,7 @@ public class Game {
 	
 	public void runner() {
 		var end = false;
-		while(true && !end) {
+		while(!end) {
 			for(var i:board.getJoueurs()) {
 				Ter.space();
 				Ter.ln("Tour du joueur "+i.getName());
@@ -306,9 +306,43 @@ public class Game {
 			}
 		}
 		board.printWinner();
+	
+	
+	
 	}
 	
-	
+	public void runnerDisplay() {
+		// initialiser les obj pour faire les affichages
+		var end = false;
+		while(!end) {
+			for(var i:board.getJoueurs()) {
+				// ici faire un affichage du jeu à chaque fois
+				Ter.space();
+				Ter.ln("Tour du joueur "+i.getName());
+				i.printStat();
+				
+				var choix = 0;
+				// faire des fonctions ou on demande sur le display et non le terminal
+				while(choix < 1 || choix > 4) {
+					choix = Ter.sc("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ");
+					switch(choix) {
+					case 1 -> {if(!moneyEvent(i)) 			choix = 0;	break;}
+					case 2 -> {if(!buyCardEvent(i))			choix = 0; 	break;}
+					case 3 -> {if(!reserveCardEvent(i)) 	choix = 0;	break;}
+					case 4 -> {if(!buyReservedCardEvent(i))	choix = 0; 	break;}
+					}
+					
+				}
+				
+				i.update();
+				if(i.getPts() > 9) {
+					Ter.ln("\n Victoire, nous terminons le tour \n");
+					end = true;
+				}
+				gestionNoble(i);
+			}
+		}
+	}
 	
 	
 }
