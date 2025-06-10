@@ -50,7 +50,23 @@ public class Graphic {
 	private final double board_heigh;
 	private final double width_card;
 	private final double height_card;
-	private final List<Money> list_money;
+	private final List<Money> list_money_bank;
+	private final double choice_x;
+	private final double choice_y;
+	private final double choice_width;
+	private final double choice_heigh;
+	private final double reserved_card_x;
+	private final double reserved_card_y;
+	private final double reserved_card_width;
+	private final double reserved_card_height;
+	private final double menu_x2;
+	private final double menu_x3;
+	private final double menu_x4;
+	private final double menu_y;
+	private final double menu_name_x;
+	private final double menu_name_y;
+	private final double menu_width;
+	private final double menu_height;
 	
 	@SuppressWarnings("unused")
 	public Graphic(ApplicationContext context) {
@@ -92,7 +108,24 @@ public class Graphic {
 		board_width=width*0.70;
 		width_card=(board_width-board_x)/4;
 		height_card=(board_heigh-board_y)/4;
-		list_money= List.of(Money.DIAMOND,Money.EMERALD,Money.ONYX,Money.RUBY,Money.SAPPHIRE,Money.GOLD);
+		list_money_bank= List.of(Money.DIAMOND,Money.EMERALD,Money.ONYX,Money.RUBY,Money.SAPPHIRE,Money.GOLD);
+		
+		choice_x=width*0.85;
+		choice_y=height*0.30;
+		choice_width=width*0.10;
+		choice_heigh=height*0.30;
+		reserved_card_x=0.65*width;
+		reserved_card_y=0.75*height;
+		reserved_card_width=0.30*width;
+		reserved_card_height=0.20*height;
+		menu_x2=0.1*width;
+		menu_x3=0.4*width;
+		menu_x4=0.7*width;
+		menu_y=height*0.7;
+		menu_name_x=width*0.40;
+		menu_name_y=height*0.20;
+		menu_width=width*0.2;
+		menu_height=height*0.2;
 		//manque les images
 		
 	}
@@ -124,7 +157,14 @@ public class Graphic {
 		drawText(player_point_text_x,player_point_text_y,new String("Point: "+pts),font,Color.BLACK);		
 	}
 	
-	
+	public void clear() {
+		context.renderFrame(graphics->{
+			graphics.clearRect(0, 0, width, height);
+		});
+	}
+	public ApplicationContext getContext() {
+		return context;
+	}
 	public void drawName(Player P) {
 		var name= P.getName();
 		drawFilledRectangle(player_name_start_x,player_name_start_y ,player_name_width ,player_name_height , Color.DARK_GRAY);
@@ -141,7 +181,10 @@ public class Graphic {
 		int little_height=(int)(size_y-size_y*0.2)/size;
 		y+=size_y*0.20;
 		
-		for(var k:list_money) {
+		for(var k:list_money_bank) {
+			if(money.get(k)==null) {
+				continue;
+			}
 			drawCircle(x+size_x*0.075,y, size_x*0.05, k.toColor());
 			drawText(x+size_x*0.15,y , new String(" : "+money.get(k)), font, color_font);//voir comment afficher les gens
 			y+=little_height;
@@ -194,6 +237,17 @@ public class Graphic {
 			y+=heigh_card;
 		}
 	}
+	public void drawChoice(List<String> choices) {
+		var size=choices.size();
+		drawFilledRectangle(choice_x, choice_y, choice_width, choice_heigh, Color.DARK_GRAY);
+		double little_heigh=choice_heigh/size;
+		var y=choice_y+little_heigh/2;
+		for(var a:choices) {
+			drawText(choice_x+0.1*choice_width, y, a, font, Color.black);
+			y+=little_heigh;
+		}
+		
+	}
 	
 	public void drawNumPlayer(int number,double x,double y,double x_size,double y_size,Color color) {
 		drawFilledRectangle(x, y, x_size, y_size,color);
@@ -207,11 +261,11 @@ public class Graphic {
 	}
 	
 	public void drawMenu() {
-		drawNumPlayer(2, 0.1*width, height*0.7, width*0.2, height*0.2,Color.DARK_GRAY );
-		drawNumPlayer(3, 0.4*width, height*0.7, width*0.2, height*0.2,Color.DARK_GRAY );
-		drawNumPlayer(4, 0.7*width, height*0.7, width*0.2, height*0.2,Color.DARK_GRAY );
+		drawNumPlayer(2, menu_x2, menu_y, menu_width, menu_height,Color.DARK_GRAY );
+		drawNumPlayer(3, menu_x3, menu_y, menu_width, menu_height,Color.DARK_GRAY );
+		drawNumPlayer(4, menu_x4, menu_y, menu_width, menu_height,Color.DARK_GRAY );
 		var title=new Font("Arial", Font.BOLD, 50);
-		drawText(width*0.40, height*0.20, new String("SPLENDOR"),title , Color.BLACK);
+		drawText(menu_name_x, menu_name_y, new String("SPLENDOR"),title , Color.BLACK);
 	}
 	
 	public void drawEnd(Player winner) {
@@ -223,6 +277,19 @@ public class Graphic {
 		drawText(0.75*width, height*0.5, new String("QUIT"),font , Color.BLACK);
 		
 	}
+	public void drawReservedCards(Player P) {
+		var size=P.getReserved().size();
+		if(size==0) {
+			return;
+		}
+		double little_width=reserved_card_width/size;
+		double x=reserved_card_x;
+		for(var card:P.getReserved()) {
+			drawCard(card, x, reserved_card_y, little_width, reserved_card_height, Color.DARK_GRAY);
+			x+=little_width;
+		}
+	}
+	
 	
 	public CoordClic clicToCoordCard(CoordClic clic){
 		if((clic.x()>= board_x && clic.x()<= board_x+board_width)||((clic.y()>= board_y && clic.y()<= board_y+board_heigh))) {
@@ -243,6 +310,30 @@ public class Graphic {
 		if(cas==5) {
 			return null;
 		}
-		return list_money.get(cas);
+		return list_money_bank.get(cas);
+	}
+	public int clicToNbPeople(CoordClic clic) {
+		if(clic.y()<=menu_height+menu_y && clic.y()>=menu_height) {
+			var x=clic.x();
+			if( x>=menu_x2 && x<=menu_width+menu_x2) {
+				return 2;
+			}
+			if( x>=menu_x3 && x<=menu_width+menu_x3) {
+				return 3;
+			}
+			if (x>=menu_x4 && x<=menu_width+menu_x4) {
+				return 4;
+			}
+		}
+		return 0;
+		
+	}
+	public int clicToChoice(CoordClic clic, List<String> choices) {
+		int size= choices.size();
+		double little_heigh=choice_heigh/size;
+		if(!((clic.x()>= choice_x && clic.x()<= choice_x+choice_width)||((clic.y()>= choice_y && clic.y()<= choice_y+choice_heigh)))) {
+			return -1;
+		}
+		return (int)((clic.y()-choice_y)/little_heigh);
 	}
 }
