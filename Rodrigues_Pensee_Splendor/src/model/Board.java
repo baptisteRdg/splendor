@@ -104,11 +104,13 @@ public class Board {
 		return grille;
 	}
 	
-	public ArrayList<ArrayList<Card>> getGrilleUpdate(){
+	public ArrayList<ArrayList<Card>> getGrilleUpdate(boolean limited){
 		var list = new ArrayList<ArrayList<Card>>(grille);
 		list.remove(3);
+		if(limited) {list.remove(2); list.remove(1); } // que les cartes lvl1 pour la V1
 		return list;
 	}
+	
 	
 	public List<Card> masterPossibility(Player p){
 		var tmp=new ArrayList<Card>();
@@ -132,9 +134,9 @@ public class Board {
 		Ter.ln(msg);
 	}
 	
-	public void printGrilleBuy() {
+	public void printGrilleBuy(boolean limited) {
 		var msg = new StringBuilder().append("Sélectionner les coordonnées de la carte à acheter\n");
-		var list = getGrilleUpdate();
+		var list = getGrilleUpdate(limited);
 		for(int i=0;i< list.size();i++) {
 			msg.append("Ligne ").append(i).append(" | ");
 			for(int j=0;j< grille.get(i).size();j++) {

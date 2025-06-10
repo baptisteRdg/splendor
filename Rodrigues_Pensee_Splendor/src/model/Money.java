@@ -11,12 +11,7 @@ public enum Money {
 	ONYX("Onyx"),
 	GOLD("Gold");
 
-	Money(String nom) {
-		name = nom;
-	}
-	
-	/// Nom utilisé dans le jeu
-	private final String name;
+	Money(String nom) {}
 	
 	public String shortString() {
 		switch (this) {

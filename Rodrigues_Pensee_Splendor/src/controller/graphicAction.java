@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.forax.zen.Application;
-import com.github.forax.zen.ApplicationContext;
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
 import view.Graphic;
-import view.Ter;
 import model.*;
 public class graphicAction {
 	
@@ -150,7 +148,7 @@ public class graphicAction {
 	
 	public CoordClic clicToCard(Board b,Graphic graph) {
 		CoordClic coord=null;
-		var listCard = b.getGrilleUpdate();
+		var listCard = b.getGrilleUpdate(false);
 		while(coord==null) {
 			var clic=getClic(graph);
 			if(clic==null) {
