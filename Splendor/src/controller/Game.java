@@ -19,15 +19,15 @@ public class Game {
 		return limited;
 	}
 	
-	public Game(){		
-		var nbPlayer = 0;var limitedChoice = -1;
-		while(nbPlayer < 2 || nbPlayer > 4) {
-			nbPlayer = Ter.sc("[Choix] Saisir le nombre de joueur (minimum 2 et maximum 4) : ");
-		}
-		while(limitedChoice != 0 && limitedChoice != 1) {
-			limitedChoice = Ter.sc("[Choix Saisir la version du jeu (0 pour la V1 et 1 pour la V2) : ");
-		}
-		limited = (limitedChoice == 0) ? false : true;
+	public Game(boolean limited){	
+		this.limited = limited; 
+		int nbPlayer;
+		if(!limited) {
+			nbPlayer = 0;
+			while(nbPlayer < 2 || nbPlayer > 4) {
+				nbPlayer = Ter.sc("[Choix] Saisir le nombre de joueur (minimum 2 et maximum 4) : ");
+			}
+		} else nbPlayer = 2;
 
 		var listCard = initCard(nbPlayer);
 		var listPlayer = initPlayer(nbPlayer);
@@ -95,7 +95,6 @@ public class Game {
 	private boolean moneyEvent(Player player) {
 		if(player.getBank().sommeAccount() >= 10) {Ter.ln("\n Vous avez déjà au moins 10 jetons"); return false;} // pas plus de 10 jetons
 		
-		//var listeJetons = new ArrayList<Money>(board.getJetons().keySet());
 		var tokensMap = board.getJetons().accountWithoutGold();
 		var tokensList = new ArrayList<Money>(tokensMap.keySet());
 		
@@ -175,9 +174,9 @@ public class Game {
 	private boolean buyCardEvent(Player player) {
 		Objects.requireNonNull(player);
 		
-		board.printGrilleBuy();
+		board.printGrilleBuy(limited);
 		
-		var listCard = board.getGrilleUpdate();
+		var listCard = board.getGrilleUpdate(limited);
 		var i = Ter.sc("Ligne :");
 		var j = Ter.sc("Numéro carte:");
 		
@@ -296,7 +295,6 @@ public class Game {
 					}
 					
 				}
-				
 				i.update();
 				if(i.getPts() > 9) {
 					Ter.ln("\n Victoire, nous terminons le tour \n");
@@ -306,34 +304,24 @@ public class Game {
 			}
 		}
 		board.printWinner();
-	
-	
-	
 	}
 	
-	public void runnerDisplay() {
-		// initialiser les obj pour faire les affichages
+	public void runnerLimited() {
 		var end = false;
 		while(!end) {
 			for(var i:board.getJoueurs()) {
-				// ici faire un affichage du jeu à chaque fois
 				Ter.space();
 				Ter.ln("Tour du joueur "+i.getName());
 				i.printStat();
 				
 				var choix = 0;
-				// faire des fonctions ou on demande sur le display et non le terminal
-				while(choix < 1 || choix > 4) {
-					choix = Ter.sc("\n[Choix] Prendre des jetons (1) Acheter une carte (2) Réserver une carte (3) Acheter une réservation (4): ");
+				while(choix < 1 || choix > 2) {
+					choix = Ter.sc("\n[Choix] Prendre des jetons (1) Acheter une carte (2) : ");
 					switch(choix) {
 					case 1 -> {if(!moneyEvent(i)) 			choix = 0;	break;}
 					case 2 -> {if(!buyCardEvent(i))			choix = 0; 	break;}
-					case 3 -> {if(!reserveCardEvent(i)) 	choix = 0;	break;}
-					case 4 -> {if(!buyReservedCardEvent(i))	choix = 0; 	break;}
 					}
-					
 				}
-				
 				i.update();
 				if(i.getPts() > 9) {
 					Ter.ln("\n Victoire, nous terminons le tour \n");
@@ -342,6 +330,7 @@ public class Game {
 				gestionNoble(i);
 			}
 		}
+		board.printWinner();
 	}
 	
 	

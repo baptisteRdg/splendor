@@ -69,7 +69,7 @@ public final class Ter {
     
     public static void space() {
     	ln();
-    	ln("--- --- ---  --- --- ---  --- --- ---");
+    	ln("⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜");
     	ln();
     }
 

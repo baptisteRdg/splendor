@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.management.ObjectInstance;
 
 import view.Ter;
 
@@ -66,11 +65,6 @@ public class Player {
 		bank.add(newMoney);
 	}
 	
-	
-	private Map<Money,Integer> subMoney(Map<Money,Integer> price) {
-		Objects.requireNonNull(price);
-		return null;
-	}
 	
 	public boolean buy(Card card) {
 		Objects.requireNonNull(card);

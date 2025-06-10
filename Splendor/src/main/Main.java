@@ -1,27 +1,37 @@
 package main;
-
-import java.awt.Color;
-import java.io.IOException;
-import java.util.List;
-
-import com.github.forax.zen.Application;
+import java.util.Objects;
 
 import controller.Game;
 import controller.graphicAction;
-import model.Board;
-import model.CardCsv;
-import model.Player;
-import view.Graphic;
+import view.Ter;
 
 
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-//		/var game = new Game();
-		//game.runner();
-		var graphgame=new graphicAction();
-		graphgame.runner();
+		Objects.requireNonNull(args);
+		var display = true;
+	    if(args[0].equals("--text")) display = false;
+	    
+		if(display) {var screen = new graphicAction(); screen.runner();}
+		else {
+			var choix = 0;
+			while(choix > 2 || choix < 1) {
+				choix = Ter.sc("\n⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜\n	\n\n	-:-:- Bienvenue sur Splendor -:-:-\n"
+						+ "\n\n sélectionné votre mode de jeu :"
+						+ "\n	1) Version classique"
+						+ "\n	2) Version réduite"
+						+ "\n->");
+			}
+			 
+			switch(choix) {
+			case 1 ->{var jeu = new Game(false); jeu.runner();break;}
+			case 2 ->{var jeu = new Game(true); jeu.runnerLimited();break;}
+			}
+		}
+		
 	}
+	
+	
 
 }
