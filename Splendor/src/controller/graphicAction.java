@@ -71,8 +71,8 @@ public class graphicAction {
 		graph.drawPlayer(P);
 		var list_choice=List.of(new String("Buy"),new String("Money"),new String("Reserved"));
 		graph.drawChoice(list_choice);
-		int choice=0;
-		while(choice==0) {
+		int choice=-1;
+		while(choice==-1) {
 			var clic=getClic(graph);
 			if(clic==null) {
 				continue;
@@ -173,8 +173,8 @@ public class graphicAction {
 			CoordClic coord=null;
 			Money money=null;
 			while(coord==null|| money==null) {
-				var clic=getClic(graph);
-				if(clic==null) {
+				coord=getClic(graph);
+				if(coord==null) {
 					continue;
 				}
 				money=graph.clicToMoneyBank(coord, b);
@@ -193,12 +193,17 @@ public class graphicAction {
 			
 			CoordClic coord=null;
 			Money money=null;
-			while(coord==null|| money==null) {
-				var clic=getClic(graph);
-				if(clic==null) {
+			while(coord==null) {
+				coord=getClic(graph);
+				
+				if(coord==null) {
 					continue;
 				}
 				money=graph.clicToMoneyBank(coord, b);
+				if(money==null) {
+					coord=null;
+					continue;
+				}
 			}
 
 			if(b.getJetons().get(money) > 3) { // au moins un jeton
@@ -210,8 +215,9 @@ public class graphicAction {
 	
 	public boolean buyCard(Board b,Player P,Graphic graph){
 		
-		var coord = clicToCard(b, graph);
+		var coord=clicToCard(b, graph);
 		var card=b.getCard(coord.y(), coord.x());
+		System.out.println(card);
 		if(!P.buy(card)) { // pas assez d'argent
 			return false;
 		}
@@ -242,19 +248,21 @@ public class graphicAction {
 
 			graph.drawMenu();
 			var board=board(graph);
-			System.out.println(board);
+			//System.out.println(board);
 			graph.clear();
 			var end=false;
 			while(!end) {
 				for(var i:board.getJoueurs()) {
 					graph.clear();
+					graph.drawPlayer(i);
 					var great=false;
 					while(!great) {
 						int choice=buyOrMoneyOrReserved(graph,board,i);
+						System.out.println(choice);
 						switch(choice) {
-							case 1 : great=buyCard(board, i, graph);break;
-							case 2 : great=getMoney(board, i, graph);break;
-							case 3 : great=reservedCard(board, i, graph);break;
+							case 0 : great=buyCard(board, i, graph);break;
+							case 1 : great=getMoney(board, i, graph);break;
+							case 2 : great=reservedCard(board, i, graph);break;
 							}
 						}
 					
